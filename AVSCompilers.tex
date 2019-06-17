@@ -65,30 +65,55 @@
 \frontmatter
 \title{A Very Simple Compiler Book}
 \author{Philip W. Howard}
-\date{2017}
+\date{2019}
 \maketitle
 \tableofcontents
 
-\chapter{Introduction}
+\chapter{Preface}
 
 Given the existence of other very good books suitable for a course on compilers, why did I choose to write another one? There are several reasons:
   
 \begin{enumerate}
-\item Most compilers books seem to be written from the perspective that the course is preparing students to actually write a production compiler. That is not the perspective of the compiler courses I've taught. While the students in my course write a complete compiler, I readily acknowledge that very few of my students will work on a compiler as part of their career. The value of the course has more to do with helping the students to become better developers than in preparing them for a particular field. I have found that this difference in perspective alters what material I find most suitable for the courses I teach. 
+\item Most compilers books seem to be written from the perspective that the course is preparing students to actually write a production compiler. That is not the perspective of the compiler courses I've taught. While the students in my course write a complete compiler, I readily acknowledge that very few of my students will work on a compiler as part of their career (although some have). The value of the course has more to do with helping the students to become better developers than in preparing them for a particular field. I have found that this difference in perspective alters what material I find most suitable for the courses I teach. 
 \item I find the price of most text books almost criminal. By writing my own text, I can make electronic copies freely available and make printed copies available for a reasonable price.
 \end{enumerate}
 
 \mainmatter
 
+\part{Overview}
+\chapter{Introduction}
+The first question that many prospective compiler students have is, ``Why should I study compilers?'' The following answers come to mind:
+
+\begin{enumerate}
+\item They're cool. Why wouldn't you want to study compilers?
+\item It gives you a chance to understand what your primary tool does. It would seem strange for a carpenter to not know what a hammer does, or to not know the trade-offs between a hammer and a nail gun. Granted, a carpenter doesn't need to know the physics of how these tools work, but they should have a general idea. 
+
+Many software developers never consider their compilers. They have this large blob of software known as an ``IDE''. They type specialized text into their IDE and click various buttons, and if they are luck, they get a working program. My claim is that better programmers have a better understanding of their tools. This allows them to make better use of these tools, and thus better use of their time, and thus (sometimes) more of their employer's money.
+
+\item It gives you a chance to manage a large code base. I've heard of undergraduate computer science students who graduate having never managed anything bigger than a two week lab. In my ten week compiler course, students write an entire compiler composed of tens of source files and thousands of lines of code. Design and implementation decisions made early have strong consequences later in the term. This is a valuable experience that every developer should have before they step into a job claiming they know what they're doing.
+
+Another advantage of the large project is that it allows the introduction of testing techniques that are harder to make ``real'' in smaller environments.
+
+\item Applied data structures. A compiler has a lot of data that needs to be managed. Many data structures present ``clean'' data structures, but real-life data-problems often aren't so clean. How about a cyclic tree that contains links to a stack of hash tables that in turn has links back to nodes of the tree? OK, if your tree is cyclic, you probably have a bug, but most data structures classes don't give you the opportunity to make (and then fix) such bugs. Having the opportunity to get buried in data is good for you.
+
+\item Applied algorithms. I started to learn calculus in high school. I continued my learning of calculus in college. But I didn't really understand what a $dx$ was until I encountered them in my calculus based physics class. They were no longer merely symbols on a paper, they were now applied, and that's how I finally grasped what they really were. In the same sense, a compiler allows you to apply quite a number of algorithms (and data structures). In doing so, they should be more ``real''.
+
+\item Performance considerations. Computers have gotten so fast, we rarely have to worry about performance (time or memory) considerations. Most compiler runs are also fast enough that the compiler's performance doesn't much matter. But given a compiler, you can compile something very big like the Linux Kernel. Performance now matters. Because of this, a compiler class gives the right to talk about performance considerations in a practical sense.
+
+\end{enumerate}
+
+\chapter{Compiler Structure}
+\chapter{Intermediate Representations}
+
 \part{Scanning}
 
 \chapter{Regular Expressions}
 
-This chapter will discuss regular expressions, what they are for, and how to use them.
+This chapter discusses regular expressions, what they are for, and how to use them.
 
 \chapter{Creating a Scanner from Regular Expressions}
 
-This chapter will cover the algorithms for converting a list of RE's to code that can process them
+This chapter covers the algorithms for converting a list of Regular Expressions into code that can process them.
 
 \section{Thompson's}
 
@@ -114,9 +139,10 @@ here is a description of flex.
 \chapter {Automatically generated parsers}
 Description of bison.
 
-\subsection{Subsection}
-
-This is just some text under a subsection.
+\part{The Back-end}
+\chapter {The Visitor Pattern}
+\chapter {Code generation}
+\chapter {Optimization}
 
 \subsubsection{Subsubsection}
 
