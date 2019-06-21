@@ -36,6 +36,8 @@
 \usepackage{amsfonts}%
 \usepackage{amssymb}%
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 %----------------------------------------------------------
 \newtheorem{theorem}{Theorem}
 \newtheorem{acknowledgement}[theorem]{Acknowledgement}
@@ -82,6 +84,7 @@ Given the existence of other very good books suitable for a course on compilers,
 
 \part{Overview}
 \chapter{Introduction}
+\section{Why?}
 The first question that many prospective compiler students have is, ``Why should I study compilers?'' The following answers come to mind:
 
 \begin{enumerate}
@@ -102,7 +105,41 @@ Another advantage of the large project is that it allows the introduction of tes
 
 \end{enumerate}
 
+\section{What is a compiler?}
+Perhaps before asking, ``Why study compilers?'' it would have been best to establish what a compiler is. But most students, by the time they get to a compiler course, have already used compilers so they have some sense of what they are: The software that translates my source code into executable code. We need to be a bit more formal as well as a bit broader in our definition.
+
+In the broadest sense, a compiler takes code as input and outputs an improved version of that code. For the compiler to be valid, it must follow two guiding principles:
+\begin{emumerate}
+\item The compiler must preserve the meaning of the original program.
+\item The compiler must improve the code in some discernible way.
+\end{enumerate}
+
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+\node (a) at (-5,0) {};
+\node (b) at (0,0) [shape=rectangle, draw] {Compiler};
+\node (c) at (5,0) {};
+
+\draw [->] (a) -- (b) node [midway, above] {code} ;
+\draw [->] (b) -- (c) node [midway, above] {improved code} ;
+%\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
+\end{tikzpicture}
+ \caption[What is a Compiler]{A compiler is a program that takes code as input and outputs an improved version of that code.}
+  \label{F.whatiscompiler}
+\end{figure}
+%----------------------------------------------------------
+
+To illustrate the first principle, if you had a program that output the numbers from $1..10$ and the compiler transformed it so that it output one of e.e. cummings's poems, then clearly the compiler did not preserve the meaning of the original program.
+
+The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
+
+This definition of a compiler is deliberately broad
+
 \chapter{Compiler Structure}
+Compilers are typically broken into two broad pieces: the front-end and the back-end. 
 \chapter{Intermediate Representations}
 
 \part{Scanning}
