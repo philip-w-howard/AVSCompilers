@@ -109,7 +109,7 @@ Another advantage of the large project is that it allows the introduction of tes
 Perhaps before asking, ``Why study compilers?'' it would have been best to establish what a compiler is. But most students, by the time they get to a compiler course, have already used compilers so they have some sense of what they are: The software that translates my source code into executable code. We need to be a bit more formal as well as a bit broader in our definition.
 
 In the broadest sense, a compiler takes code as input and outputs an improved version of that code. For the compiler to be valid, it must follow two guiding principles:
-\begin{emumerate}
+\begin{enumerate}
 \item The compiler must preserve the meaning of the original program.
 \item The compiler must improve the code in some discernible way.
 \end{enumerate}
@@ -136,13 +136,48 @@ To illustrate the first principle, if you had a program that output the numbers 
 
 The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
 
-This definition of a compiler is deliberately broad
+This definition of a compiler is deliberately broad. A C preprocessor (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' coded.
 
 \chapter{Compiler Structure}
-Compilers are typically broken into two broad pieces: the front-end and the back-end. 
-\chapter{Intermediate Representations}
+Compilers are typically broken into two broad pieces: the front-end and the back-end. The frond-end deals with language specific issues. The back-end deals with target machine specifics.
 
-\part{Scanning}
+A C compiler would need a very different front-end compared with a Haskell compiler because the syntax of the languages is very different. One way to view the front-end of the compiler is that it answers the question, ``Is this a valid program?'' If you feed a Scheme program into an R compiler, the answer would certainly by ``No''. If a Java program that was missing a semicolon was fed into a Java compiler, the answer would also be, ``No'', but for very different reasons.
+
+The back-end of a compiler deals with target specific issues. The back-end for a compiler that targets the Java Virtual Machine (JVM) would be different than the back-end for a compiler that targets and ARM processor. Both of those would be different from a C preprocessor that simply outputs text.
+
+Separating the front-end from the back-end makes sense because they are logically quite different, but it also makes sense because if they are properly designed, you can mix and match different front-ends and back-ends. Suppose you had a really good C compiler, but you wanted to port it to target a different machine. There would be no reason to rewrite the front-end. The C language is the same no matter what machine you are targeting. So if you wrote a new back-end and attached it to your existing front-end, you would now have a new compiler. Mixing can go the other way as well. Starting with the same really good C compiler, suppose you wanted a compiler for a different language (such as Go). There is no reason to rewrite the back-end, simply create a front-end for the new language and attach it to your existing back-end, and you have a new compiler.
+
+For this mixing and matching to work seamlessly, there needs to be a common interface between the front-ends and the back-ends. This interface is typically called an Intermediate Representation (IR) --- see Chapter~\ref{chapter.IR}. The front-end translates the language into the IR, and the back-end translates the IR to the target representation. This is illustrated in Figure~\ref{figure.compiler_structure}
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+\node (a) at (-5,1.5) [shape=rectangle, draw]{C front-end};
+\node (b) at (-5,0) [shape=rectangle, draw] {Go front-end};
+\node (c) at (-5,-1.5) [shape=rectangle, draw]{FORTRAN fron-end};
+\node (d) at (0,0)  [shape=circle, draw]{IR};
+\node (e) at (5,1.5) [shape=rectangle, draw]{x86 back-end};
+\node (f) at (5,0) [shape=rectangle, draw] {ARM back-end};
+\node (g) at (5,-1.5) [shape=rectangle, draw]{JVM back-end};
+
+\draw [->] (a) -- (d)  ;
+\draw [->] (b) -- (d)  ;
+\draw [->] (c) -- (d)  ;
+\draw [->] (d) -- (e)  ;
+\draw [->] (d) -- (f)  ;
+\draw [->] (d) -- (g)  ;
+\end{tikzpicture}
+ \caption[Compiler Structure]{A properly structured compiler allows you to have multiple language-specific front-ends joined to multiple target-specific back-ends. The two a joined using an intermediate representation.}
+  \label{figure.compiler_structure}
+\end{figure}
+%----------------------------------------------------------
+
+Compiler front-ends typically contain two components: A scanner (or tokenizer or lexer), and a parser. Scanners are discussed in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
+
+\chapter{Intermediate Representations} \label{chapter.IR}
+
+\part{Scanning} \label{part.scanner}
 
 \chapter{Regular Expressions}
 
@@ -169,7 +204,7 @@ Here is a table drive scanner
 \chapter{Automatically Generated Scanners}
 here is a description of flex.
 
-\part{Parsing}
+\part{Parsing} \label{part.parser}
 \chapter{Context Free Grammars}
 \chapter {Top-down recursive-descent parsers}
 \chapter {Bottom-up parsers}
