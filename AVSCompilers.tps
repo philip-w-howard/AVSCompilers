@@ -12,13 +12,13 @@ MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=26
 NormalPos.right=982
-NormalPos.bottom=518
+NormalPos.bottom=420
 Class=LaTeXView
 Document=AVSCompilers.tex
 
 [Frame0_View0,0]
-TopLine=159
-Cursor=9296
+TopLine=276
+Cursor=15782
 
 [SessionInfo]
 FrameCount=1

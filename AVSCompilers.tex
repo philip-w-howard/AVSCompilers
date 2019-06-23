@@ -38,6 +38,41 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
+
+\usepackage{float}
+\newfloat{mylisting}{thbp}{lob}[chapter]
+\floatname{mylisting}{Listing}
+
+\usepackage{listings}
+\lstset{ %
+xleftmargin={0.5in},						% left margin
+language=C,                			% choose the language of the code
+columns=flexible,
+basicstyle=\small\ttfamily,     % the size of the fonts that are used for the code (was sffamily)
+numbers=left,                   % where to put the line-numbers
+numberstyle=\small,             % the size of the fonts that are used for the line-numbers
+stepnumber=5,                   % the step between two line-numbers. If it's 1 each line will be numbered
+numberfirstline=true,						% number the first line of the listing
+firstnumber=1,									% auto or <number>
+numbersep=5pt,                  % how far the line-numbers are from the code
+%backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,	                  % adds a frame around the code
+tabsize=2,	                    % sets default tabsize to 2 spaces
+captionpos=b,                   % sets the caption-position to bottom
+breaklines=true,                % sets automatic line breaking
+%breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+%title=\lstname,                 % show the filename of files included with \lstinputlisting; also try caption instead of title
+%escapeinside={\%*}{*)}            % if you want to add a comment within your code
+}
+\newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
+
+%\usepackage[T1]{fontenc}  % access \textquotedbl
+%\usepackage{textcomp}     % access \textquotesingle
+
+\newcommand{\qq}{\symbol{34}} % 34 is the decimal ascii code for "
 %----------------------------------------------------------
 \newtheorem{theorem}{Theorem}
 \newtheorem{acknowledgement}[theorem]{Acknowledgement}
@@ -173,7 +208,9 @@ For this mixing and matching to work seamlessly, there needs to be a common inte
 \end{figure}
 %----------------------------------------------------------
 
-Compiler front-ends typically contain two components: A scanner (or tokenizer or lexer), and a parser. Scanners are discussed in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
+Compiler front-ends typically contain two components: A scanner (aka tokenizer or lexer), and a parser. Scanners are discussed in detail in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
+
+Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf( "hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
 
 \chapter{Intermediate Representations} \label{chapter.IR}
 
