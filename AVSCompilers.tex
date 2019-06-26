@@ -4,6 +4,7 @@
 %----------------------------------------------------------
 %
 \documentclass[letterpaper,12pt,openany,reqno]{book}%
+
 %
 %----------------------------------------------------------
 % This is a sample document for the standard LaTeX Book Class
@@ -73,6 +74,22 @@ breaklines=true,                % sets automatic line breaking
 %\usepackage{textcomp}     % access \textquotesingle
 
 \newcommand{\qq}{\symbol{34}} % 34 is the decimal ascii code for "
+
+\usepackage{mdwlist}
+\newenvironment{mydesc}[1][9em]
+  {
+     \begin{basedescript}
+     {
+      \renewcommand{\makelabel}[1]{\bfseries##1}
+      \desclabelwidth{ #1 }
+      \desclabelstyle{\multilinelabel}
+     }
+  }
+  {
+     \end{basedescript}%
+  }
+\makecompactlist{mydesc*}{mydesc}
+
 %----------------------------------------------------------
 \newtheorem{theorem}{Theorem}
 \newtheorem{acknowledgement}[theorem]{Acknowledgement}
@@ -116,6 +133,11 @@ Given the existence of other very good books suitable for a course on compilers,
 \end{enumerate}
 
 \mainmatter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FORMATTING
+\setlength{\parindent}{0cm} % Default is 15pt.
+\setlength{\parskip}{12pt plus 2pt minus 2pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \part{Overview}
 \chapter{Introduction}
@@ -210,7 +232,11 @@ For this mixing and matching to work seamlessly, there needs to be a common inte
 
 Compiler front-ends typically contain two components: A scanner (aka tokenizer or lexer), and a parser. Scanners are discussed in detail in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
 
-Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf( "hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
+Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf("hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
+
+Note: Programmers normally format their code to make it ``pretty''. The code in the above examples was not formatted to emphasize that to a compiler, code is just a stream of characters.
+
+The parser takes a stream of tokens and decides whether that stream of tokens makes up a valid program (more specifically a ``compilation unit'') in the language. The parser only looks at the syntax of the language. As a result, ``valid program'' only means ``a program that is syntactically correct''. It does not mean ``a bug free program''.
 
 \chapter{Intermediate Representations} \label{chapter.IR}
 
@@ -218,8 +244,35 @@ Most computer program source code comes in the form of a stream of characters (a
 
 \chapter{Regular Expressions}
 
-This chapter discusses regular expressions, what they are for, and how to use them.
+A scanner turns a stream of characters into a stream of tokens. To facilitate this conversion, most compilers make use of regular expressions to define tokens. Many programmers are familiar with regular expressions from non-compiler contexts. Examples include using an asterisk (*) as a wildcard in a file name, or specifying patterns for the \code{grep} utility. Different programs use different syntax for specifying regular expressions. In this section a minimalist syntax for all regular expressions is presented. Most programs that interpret regular expressions enhance this syntax in various ways to make writing regular expressions easier, but the added syntax does not add extra capabilities.
 
+Regular expressions include the following features:
+\begin{mydesc}[10em]
+	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\texttt{ab}'' with ``\texttt{bc}'' yields the string ``\texttt{abcd}''.
+  \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use the vertical bar (\texttt{|}) to mean alternation. So the expression \texttt{a | b | c} means to choose either an '\texttt{a}', a '\texttt{b}', or a '\texttt{c}'.
+	\item[Grouping] Parenthesis can be used for grouping operations much as they can in algebraic expressions.
+	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk (\texttt{*}). So, for example, tt{x*} means zero or more '\texttt{x}' characters. Kleene Closure has higher precedence that concatenation so that \texttt{ab*} means \texttt{a(b*)} not \texttt{(ab)*}.
+\end{mydesc}
+
+In addition to these operations, the $\Lambda$ symbol is used to represent an empty string (a string with no characters in it).
+
+The most common enhancements to this syntax are as follows:
+\begin{mydesc}
+\item[zero or one] The question mark (\texttt{?}) indicates zero or one of an item so that \texttt{a?} means the same as \texttt{($\Lambda$ | a)}.
+\item[one or more] The plus sign (\texttt{+}) is similar to Kleene Closure, but it is one-or-more not zero-or-more so that \texttt{a+} means the same as \texttt{aa*}.
+\item[character range] Square brackets (\texttt{[]}) can be used to specify a character range so that \texttt{[a-m]} means any single character in the range '\texttt{a}' through '\texttt{m}'.
+\end{mydesc}
+
+If we want a regular expression for integer constants, we could try
+\begin{quote}\texttt{[0-9]+}\end{quote}
+but this allows any number of leading zeros. A better expression would be:
+\begin{quote}\texttt{[1-9][0-9]*}\end{quote}
+This fixes the leading zero problem, but it doesn't allow the number zero. This can be fixed as follows:
+\begin{quote}\texttt{0+([1-9][0-9]*)}\end{quote}
+If we want to allow negative numbers, we could add an optional minus sign:
+\begin{quote}\texttt{0+(-?[1-9][0-9]*)}\end{quote}
+
+zzz
 \chapter{Creating a Scanner from Regular Expressions}
 
 This chapter covers the algorithms for converting a list of Regular Expressions into code that can process them.
@@ -247,6 +300,11 @@ here is a description of flex.
 \chapter {Bottom-up parsers}
 \chapter {Automatically generated parsers}
 Description of bison.
+
+\part {Semantic Processing}
+\chapter {Syntax vs. Semantics}
+\chapter {Type systems}
+\chapter {Implementation details}
 
 \part{The Back-end}
 \chapter {The Visitor Pattern}

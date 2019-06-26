@@ -2,31 +2,35 @@
 \contentsline {part}{I\hspace {1em}Overview}{1}
 \contentsline {chapter}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {1.1}Why?}{2}
-\contentsline {section}{\numberline {1.2}What is a compiler?}{3}
-\contentsline {chapter}{\numberline {2}Compiler Structure}{5}
-\contentsline {chapter}{\numberline {3}Intermediate Representations}{7}
-\contentsline {part}{II\hspace {1em}Scanning}{8}
-\contentsline {chapter}{\numberline {4}Regular Expressions}{9}
-\contentsline {chapter}{\numberline {5}Creating a Scanner from Regular Expressions}{10}
-\contentsline {section}{\numberline {5.1}Thompson's}{10}
-\contentsline {section}{\numberline {5.2}Subset Construction}{10}
-\contentsline {chapter}{\numberline {6}Scanner Code}{11}
-\contentsline {section}{\numberline {6.1}table driven}{11}
-\contentsline {section}{\numberline {6.2}switch statement}{11}
-\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{12}
-\contentsline {part}{III\hspace {1em}Parsing}{13}
-\contentsline {chapter}{\numberline {8}Context Free Grammars}{14}
-\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{15}
-\contentsline {chapter}{\numberline {10}Bottom-up parsers}{16}
-\contentsline {chapter}{\numberline {11}Automatically generated parsers}{17}
-\contentsline {part}{IV\hspace {1em}The Back-end}{18}
-\contentsline {chapter}{\numberline {12}The Visitor Pattern}{19}
-\contentsline {chapter}{\numberline {13}Code generation}{20}
-\contentsline {chapter}{\numberline {14}Optimization}{21}
-\contentsline {subsubsection}{Subsubsection}{21}
-\contentsline {paragraph}{Subsubsubsection}{21}
-\contentsline {subparagraph}{Subsubsubsubsection}{21}
-\contentsline {section}{\numberline {14.1}Theorem-Like Environments}{21}
-\contentsline {chapter}{\numberline {A}The First Appendix}{23}
-\contentsline {chapter}{\numberline {B}The Second Appendix}{24}
-\contentsline {chapter}{Afterword}{26}
+\contentsline {section}{\numberline {1.2}What is a compiler?}{4}
+\contentsline {chapter}{\numberline {2}Compiler Structure}{6}
+\contentsline {chapter}{\numberline {3}Intermediate Representations}{9}
+\contentsline {part}{II\hspace {1em}Scanning}{10}
+\contentsline {chapter}{\numberline {4}Regular Expressions}{11}
+\contentsline {chapter}{\numberline {5}Creating a Scanner from Regular Expressions}{14}
+\contentsline {section}{\numberline {5.1}Thompson's}{14}
+\contentsline {section}{\numberline {5.2}Subset Construction}{14}
+\contentsline {chapter}{\numberline {6}Scanner Code}{15}
+\contentsline {section}{\numberline {6.1}table driven}{15}
+\contentsline {section}{\numberline {6.2}switch statement}{15}
+\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{16}
+\contentsline {part}{III\hspace {1em}Parsing}{17}
+\contentsline {chapter}{\numberline {8}Context Free Grammars}{18}
+\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{19}
+\contentsline {chapter}{\numberline {10}Bottom-up parsers}{20}
+\contentsline {chapter}{\numberline {11}Automatically generated parsers}{21}
+\contentsline {part}{IV\hspace {1em}Semantic Processing}{22}
+\contentsline {chapter}{\numberline {12}Syntax vs. Semantics}{23}
+\contentsline {chapter}{\numberline {13}Type systems}{24}
+\contentsline {chapter}{\numberline {14}Implementation details}{25}
+\contentsline {part}{V\hspace {1em}The Back-end}{26}
+\contentsline {chapter}{\numberline {15}The Visitor Pattern}{27}
+\contentsline {chapter}{\numberline {16}Code generation}{28}
+\contentsline {chapter}{\numberline {17}Optimization}{29}
+\contentsline {subsubsection}{Subsubsection}{29}
+\contentsline {paragraph}{Subsubsubsection}{29}
+\contentsline {subparagraph}{Subsubsubsubsection}{29}
+\contentsline {section}{\numberline {17.1}Theorem-Like Environments}{30}
+\contentsline {chapter}{\numberline {A}The First Appendix}{32}
+\contentsline {chapter}{\numberline {B}The Second Appendix}{33}
+\contentsline {chapter}{Afterword}{35}
