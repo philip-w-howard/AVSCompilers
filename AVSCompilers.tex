@@ -73,7 +73,14 @@ breaklines=true,                % sets automatic line breaking
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
 
-\newcommand{\qq}{\symbol{34}} % 34 is the decimal ascii code for "
+%---------------------------------------------------
+% commands for drawing FAs
+\newcommand{\faterminalnode}[3] {\draw (#1) circle [radius=9pt]; \node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
+\newcommand{\fanonterminalnode}[3] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
+\newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\fastart}[1] {\coordinate (start) at (#1);}
+%---------------------------------------------------
 
 \usepackage{mdwlist}
 \newenvironment{mydesc}[1][9em]
@@ -272,11 +279,63 @@ This fixes the leading zero problem, but it doesn't allow the number zero. This 
 If we want to allow negative numbers, we could add an optional minus sign:
 \begin{quote}\texttt{0+(-?[1-9][0-9]*)}\end{quote}
 
-zzz
+\textbf{Exercises}
+
+\begin{enumerate}
+\item Write a regular expression for a string containing any odd number of the letter \texttt{a}.
+\item Write a regular expression for C (or Java) variable names. Valid characters include upper and lower case letters, digits, and the underscore (\texttt{\_}).
+\item Write a regular expression for a string containing any number (including zero) of a positive even number of \texttt{a}'s followed by an add number of \texttt{b}'s. The following are valid strings: \texttt{aaaabbb}, \texttt{aabaabaabbb}, \texttt{aaaaaabbbbbaabaabaab}. The following are not valid strings: \texttt{aaab}, \texttt{aaaabbbaa}, \texttt{bbbaab}.
+\item For the previous question, state why each of the non-valid strings are non-valid.
+\item Write a regular expression for a floating-point constant. The following rules apply: 
+\begin{enumerate}
+\item The integer part cannot have leading zeros unless the integer part is zero. 
+\item If there is a decimal point, it must be followed by at least one digit.
+\item The decimal part must not have trailing zeros unless the decimal part is zero.
+\end{enumerate}
+\end{enumerate}
+
 \chapter{Creating a Scanner from Regular Expressions}
 
-This chapter covers the algorithms for converting a list of Regular Expressions into code that can process them.
+To specify a scanner for a compiler, a developer could specify a regular expression for each token type. But how do you go from that specification to code that can actually process the input? This chapter discusses the algorithms used to convert regular expressions into a scanner. The general process is to convert the regular expression into a finite automaton. The finite automaton can then be evaluated using a simple table look-up on each character.
 
+\section{Finite Automata}
+Finite Automata (aka State Machines) consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. They are often drawn as diagrams as illustrated in Figure~\ref{F.FA_1}.
+
+The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. 
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fastart {-4, -2};
+\fanonterminalnode {-2,-2}{a};
+\faterminalnode {0,0}{b};
+\fanonterminalnode {2,-2}{c};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b}{x};
+\fatransition{a}{c}{y};
+\fatransition{c}{b}{z};
+\faarctransition {c}{a}{t}{215}{315};
+
+\end{tikzpicture}
+ \caption[Sample Finite Automaton]{This is a sample FA. Node $a$ is the start state (it has an incoming arrow from nowhere). State $b$ is a final state (signified by the double-circle). The transitions are labeled by what letter is used to move from one state to another.}
+  \label{F.FA_1}
+\end{figure}
+%----------------------------------------------------------
+
+Using the FA in Figure~\ref{F.FA_1}, and the input $ytx$, the processing starts in State~$a$ (the start state). The $y$ is used to transition to State~$c$. The $t$ is used to transition back to State~$a$. The $x$ is used to transition to State~$b$. Since the input is exhausted while in a final state, the string is accepted by the FA.
+
+Two conditions can cause a string to be rejected: 
+\begin{enumerate}
+\item If the input is exhausted and the current state isn't a final state. The input $yty$ illustrates this case.
+\item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
+\end{enumerate}
+
+Given these rules from processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \texttt{(yt)* (x | yz)}
+
+zzz
 \section{Thompson's}
 
 This section presents Thompson's construction.
