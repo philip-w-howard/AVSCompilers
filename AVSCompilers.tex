@@ -76,11 +76,12 @@ breaklines=true,                % sets automatic line breaking
 %---------------------------------------------------
 % commands for drawing FAs
 \newcommand{\faterminalnode}[3] {\draw (#1) circle [radius=9pt]; \node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
-\newcommand{\fanonterminalnode}[3] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
+\newcommand{\fastart}[1] {\coordinate (start) at (#1);}
+\newcommand{\fanonterminalnode}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
+\newcommand{\fanolabel}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {};}
 \newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
 \newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
 \newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
-\newcommand{\fastart}[1] {\coordinate (start) at (#1);}
 %---------------------------------------------------
 
 \usepackage{mdwlist}
@@ -379,12 +380,146 @@ The NFA in Figure~\ref{F.FA_2} accepts the following stings:
 	\item[$zy$] This string is accepted by using the $z$ to transition to Node~$d$ and then using the $y$ to transition to Node~$e$.
 \end{mydesc}
 
-NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA.\footnote{There are proofs of this statement, but they are normally left to a course on computer theory.} The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
+NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{There are proofs of this statement, but they are normally left to a course on computer theory.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
 
 \section{Thompson's}
 
+The first step in converting a regular expression to executable code is to convert it to an equivalent NFA. For this conversion, we are going to use Thompson's Construction\footnote{Credited to Ken Thompson, the originator of the Unix operating system.}. The beauty of Thompson's construction is that it is a mechanical process -- one that doesn't require any creative thought. In other words, it can be automated. A computer program can be written to perform this conversion.
+
+If two FA's each have a single start state and a single final state, and if the start state doesn't have any inbound edges and the final state doesn't have any outbound edges, then the two FA's can be composed by connecting the end state of one FA to the start state of the other using a $\Lambda$ transition. Thompson's Construction makes use of this fact by creating composed FA's for each operation supported by regular expressions (concatenation, alternation, and Kleene Closure). An NFA can be built for any regular expression simply by composing it one small piece at a time using Thompson's three diagrams. Figure~\ref{F.Thompsons} shows the three base diagrams.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {a};
+\fanonterminalnode {4,0} {b};
+\fanonterminalnode {6,0} {c};
+\faterminalnode {8,0} {d};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b}{FA 1};
+\fatransition{b}{c}{$\Lambda$};
+\fatransition{c}{d}{FA 2};
+
+\node at (5,-1) {Concatenation};
+\node at (5,-2) {};
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {a};
+\fanonterminalnode {4,1} {b};
+\fanonterminalnode {6,1} {c};
+\fanonterminalnode {4,-1} {d};
+\fanonterminalnode {6,-1} {e};
+\faterminalnode {8,0} {f};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b}{$\Lambda$};
+\fatransition{b}{c}{FA 1};
+\fatransition{c}{f}{$\Lambda$};
+
+\fatransition{a}{d}{$\Lambda$};
+\fatransition{d}{e}{FA 2};
+\fatransition{e}{f}{$\Lambda$};
+
+\node at (5,-2) {Alternation};
+\node at (5,-3) {};
+\end{tikzpicture}
+
+%Kleene Closure
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {a};
+\fanonterminalnode {4,0} {b};
+\fanonterminalnode {6,0} {c};
+\faterminalnode {8,0} {d};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b}{$\Lambda$};
+\fatransition{b}{c}{FA};
+\fatransition{c}{d}{$\Lambda$};
+\faarctransition {a}{d}{$\Lambda$}{315}{225};
+\faarctransition {c}{b}{$\Lambda$}{105}{75};
+
+\node at (5,-2) {Kleene Closure};
+\node at (5,-3) {};
+\end{tikzpicture}
+
+ \caption[Thompson's Construction]{Thompson's Construction method makes use of these three diagrams. For each diagram, the FA(s) being composed are represented as two nodes (the start and end nodes) labeled $FA$, $FA 1$, or $FA 2$.}
+  \label{F.Thompsons}
+\end{figure}
+%----------------------------------------------------------
+
+The trick to using Thompson's construction is to NOT be creative. Each FA built with Thompson's has a single start and a single final state. The diagram can be dropped as-is directly into the next step in the construction. Nodes never need to be erased, and each composition should be drawn exactly as shown in Figure~\ref{F.Thompsons}.
+
+Let's illustrate by doing several constructions. First, let's construct an NFA for \texttt{a (b | c)}. It's best to start with the inner most operation (in this case \texttt{(b | c)}) and work out. So first draw the alternation diagram, and then drop the resulting diagram into the concatenation diagram. This is illustrated in Figure~\ref{F.ThompsonsExample1}.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {a};
+\fanolabel {4,1} {b1};
+\fanolabel {6,1} {b2};
+\fanolabel {4,-1} {c1};
+\fanolabel {6,-1} {c2};
+\faterminalnode {8,0} {b};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{b};
+\fatransition{b2}{b}{$\Lambda$};
+
+\fatransition{a}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{b}{$\Lambda$};
+
+\node at (5,-2) {\texttt{(b | c)}};
+\node at (5,-3) {};
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {s};
+\fanolabel {4,0} {a1};
+
+\fanolabel {6,0} {a};
+\fanolabel {8,1} {b1};
+\fanolabel {10,1} {b2};
+\fanolabel {8,-1} {c1};
+\fanolabel {10,-1} {c2};
+\faterminalnode {12,0} {b};
+
+\fatransition{start}{s}{};
+\fatransition{s}{a1}{a};
+\fatransition{a1}{a}{$\Lambda$};
+
+
+\fatransition{a}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{b};
+\fatransition{b2}{b}{$\Lambda$};
+
+\fatransition{a}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{b}{$\Lambda$};
+
+\node at (7,-2) {\texttt{a (b | c)}};
+\node at (7,-3) {};
+\end{tikzpicture}
+
+ \caption[Thompson's Construction for \texttt{a (b | c)}]{Thompson's Construction for \texttt{a (b | c)}. Note that in the second step, the Nodes $a$ and $b$ from the first step are dropped into the position of Nodes $c$ and $d$ for the concatenation construction.}
+  \label{F.ThompsonsExample1}
+\end{figure}
+%----------------------------------------------------------
+
+
 zzz
-This section presents Thompson's construction.
 
 \section{Subset Construction}
 
