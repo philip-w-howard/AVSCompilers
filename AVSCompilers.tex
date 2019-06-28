@@ -78,6 +78,7 @@ breaklines=true,                % sets automatic line breaking
 \newcommand{\faterminalnode}[3] {\draw (#1) circle [radius=9pt]; \node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fanonterminalnode}[3] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
 \newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
 \newcommand{\fastart}[1] {\coordinate (start) at (#1);}
 %---------------------------------------------------
@@ -333,11 +334,56 @@ Two conditions can cause a string to be rejected:
 \item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
 \end{enumerate}
 
-Given these rules from processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \texttt{(yt)* (x | yz)}
+Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \texttt{(yt)* (x | yz)}
 
-zzz
+\subsection{Non-deterministic Finite Automota}
+
+The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
+\begin{enumerate}
+\item Multiple outbound edges labeled with the same letter. If that letter is read, any of the outbound edges labeled with that letter can be taken. This is illustrated by the edges from Node~$a$ labeled $z$ in Figure~\ref{F.FA_2}.
+\item Edges labeled $\Lambda$. These edges can be taken without consuming an input character. Node~$a$ has a $\Lambda$ transition meaning you can leave Node~$a$ without consuming any characters.
+\end{enumerate}
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fastart {-4, 0};
+\fanonterminalnode {-2,0}{a};
+\fanonterminalnode {0,2} {b};
+\fanonterminalnode {0,0} {c};
+\fanonterminalnode {0,-2} {d};
+\faterminalnode {2,0} {e};
+
+\fatransition{start}{a}{};
+\fatransition{a}{b}{$\Lambda$};
+\fatransition{a}{c}{z};
+\fatransition{a}{d}{z};
+\fatransition{b}{e}{z};
+\farighttransition{b}{c}{t};
+\fatransition{c}{e}{x};
+\fatransition{d}{e}{y};
+
+\end{tikzpicture}
+ \caption[Sample Non-deterministic Finite Automaton]{This is a sample NFA. Node $a$ has multiple outbound transitions on $z$. It also has an outbound transition on $\Lambda$ meaning you could leave Node~$a$ without consuming any characters.}
+  \label{F.FA_2}
+\end{figure}
+%----------------------------------------------------------
+
+The NFA in Figure~\ref{F.FA_2} accepts the following stings:
+\begin{mydesc}[2em]
+	\item[$z$] This string is accepted by following the $\Lambda$ transition to Node~$b$ and then using the $z$ to transition to Node~$e$.
+	\item[$tx$] This string is accepted by following the $\Lambda$ transition to Node~$b$ and then using the $t$ to transition to Node~$c$ and the $x$ to transition to Node~$e$.
+	\item[$zx$] This string is accepted by using the $z$ to transition to Node~$c$ and then using the $x$ to transition to Node~$e$.
+	\item[$zy$] This string is accepted by using the $z$ to transition to Node~$d$ and then using the $y$ to transition to Node~$e$.
+\end{mydesc}
+
+NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA.\footnote{There are proofs of this statement, but they are normally left to a course on computer theory.} The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
+
 \section{Thompson's}
 
+zzz
 This section presents Thompson's construction.
 
 \section{Subset Construction}
