@@ -184,7 +184,6 @@ In the broadest sense, a compiler takes code as input and outputs an improved ve
 \item The compiler must improve the code in some discernible way.
 \end{enumerate}
 
-
 %----------------------------------------------------------
 \begin{figure}[hbt]
 \centering
@@ -651,7 +650,7 @@ As a third example, \texttt{a* (b | c)}, includes a concatenation of two complex
 
 \fatransition{start}{t}{};
 \fatransition{t}{b}{$\Lambda$};
-\fatransition{b}{c}{FA};
+\fatransition{b}{c}{a};
 \fatransition{c}{u}{$\Lambda$};
 \faarctransition {a}{u}{$\Lambda$}{315}{225};
 \faarctransition {c}{b}{$\Lambda$}{105}{75};
@@ -682,8 +681,85 @@ It should be clear that Thompson's construction creates lots of $\Lambda$ transi
 
 \section{Subset Construction}
 
+To illustrate how an NFA could be processed, let's consider again the NFA for \texttt{a* (b | c)} presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
+forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
+
+\begin{figure}[hbt]
+\centering
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {1};
+\fanonterminalnode {4,0} {2};
+\fanonterminalnode {6,0} {3};
+\fanonterminalnode {8,0} {4};
+
+\fatransition{start}{1}{};
+\fatransition{1}{2}{$\Lambda$};
+\fatransition{2}{3}{a};
+\fatransition{3}{4}{$\Lambda$};
+\faarctransition {a}{4}{$\Lambda$}{315}{225};
+\faarctransition {3}{2}{$\Lambda$}{105}{75};
+
+\fanonterminalnode {10,0} {5};
+\fanonterminalnode {12,1} {6};
+\fanonterminalnode {14,1} {7};
+\fanonterminalnode {12,-1} {8};
+\fanonterminalnode {14,-1} {9};
+\faterminalnode {16,0} {10};
+
+\fatransition{4}{5}{$\Lambda$};
+\fatransition{5}{6}{$\Lambda$};
+\fatransition{6}{7}{b};
+\fatransition{7}{10}{$\Lambda$};
+
+\fatransition{5}{8}{$\Lambda$};
+\fatransition{8}{9}{c};
+\fatransition{9}{10}{$\Lambda$};
+
+\end{tikzpicture}
+} % end scaled box
+\caption[NFA produced by Thompson's]{This is the NFA produced by Thompson's for the regular expression \texttt{a* (b | c)}}
+  \label{F.subsetNFA}
+\end{figure}
+
+We could continue to find new meta-states by enumerating all possible outbound inputs from each meta-state and then following the $\Lambda$s from the resulting states. The results are presented in Table~\ref{T.subsetTable1}.
+
+\begin{table}[hbt]
+\center
+\begin{tabular}{l|l|l|l}
+\hline
+\textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+A & 1, 2, 4, 5, 6, 8 & a & 2, 4, 5, 6, 8 \\
+A & 1, 2, 4, 5, 6, 8 & b & 7, 10 \\
+A & 1, 2, 4, 5, 6, 8 & c & 9, 10 \\
+B & 2, 4, 5, 6, 8 & a & 2, 4, 5, 6, 8 \\
+B & 2, 4, 5, 6, 8 & b & 7, 10 \\
+B & 2, 4, 5, 6, 8 & c & 9, 10 \\
+C & 7, 10 & a & - \\
+C & 7, 10 & b & - \\
+C & 7, 10 & c & - \\
+D & 9, 10 & a & - \\
+D & 9, 10 & b & - \\
+D & 9, 10 & c & - \\
+\hline
+\end{tabular}
+\caption[Result of subset construction]{The results of performing the subset construction on the NFA in Figure~\ref{F.subsetNFA}. An input of ``-'' means there are no valid inputs starting from this state. Resulting states of ``-'' mean there are no valid destinations from this state.}
+\label{T.subsetTable1}
+\end{table}
+
+We need a formal algorithm for producing these tables. The steps are as follows:
+\begin{enumerate}
+\item From the start state, follow all $\Lambda$s. Follow as many as you can, not just one. This is known as the $\Lambda$ closure of a state: all states reachable from a given state following only $\Lambda$s. This set of states is labeled $A$ in the table.
+\item Make multiple rows, one for each character in the source-language, for each meta-state not already in the table. Initially this is only meta-state~$A$, and for the example NFA in Figure~\ref{F.subsetNFA}, the characters in the source language are $a, b, c$ meaning three rows for each meta-state.
+\item For each NFA state in the meta-state, if there is an outbound transition on the input, write down the destination state in the resulting states column.
+\item Extend the list of states in the resulting states column by forming the $\Lambda$ closure of each state already in the column.
+\item If there are any new unique sets of states in the resulting states column, give them a unique label and return to Step~2.
+\end{enumerate}
+The process will stop once all existing rows are filled in and no new rows get generated.
+
 zzz
-This section presents the Subset Construction
 
 \chapter{Scanner Code}
 \section{table driven}
