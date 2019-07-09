@@ -1,4 +1,4 @@
-\contentsline {chapter}{Preface}{iv}
+\contentsline {chapter}{Preface}{v}
 \contentsline {part}{I\hspace {1em}Overview}{1}
 \contentsline {chapter}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {1.1}Why?}{2}
@@ -7,11 +7,11 @@
 \contentsline {chapter}{\numberline {3}Intermediate Representations}{9}
 \contentsline {part}{II\hspace {1em}Scanning}{10}
 \contentsline {chapter}{\numberline {4}Regular Expressions}{11}
-\contentsline {chapter}{\numberline {5}Creating a Scanner from Regular Expressions}{14}
+\contentsline {chapter}{\numberline {5}Creating a Scanner}{14}
 \contentsline {section}{\numberline {5.1}Finite Automata}{14}
 \contentsline {subsection}{\numberline {5.1.1}Non-deterministic Finite Automota}{15}
 \contentsline {section}{\numberline {5.2}Thompson's}{17}
-\contentsline {section}{\numberline {5.3}Subset Construction}{18}
+\contentsline {section}{\numberline {5.3}Subset Construction}{20}
 \contentsline {chapter}{\numberline {6}Scanner Code}{21}
 \contentsline {section}{\numberline {6.1}table driven}{21}
 \contentsline {section}{\numberline {6.2}switch statement}{21}

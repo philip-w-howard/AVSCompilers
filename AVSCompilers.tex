@@ -37,10 +37,14 @@
 \usepackage{amsfonts}%
 \usepackage{amssymb}%
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
 \usepackage{float}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
 \newfloat{mylisting}{thbp}{lob}[chapter]
 \floatname{mylisting}{Listing}
 
@@ -131,7 +135,7 @@ breaklines=true,                % sets automatic line breaking
 \date{2019}
 \maketitle
 \tableofcontents
-
+\listoffigures
 \chapter{Preface}
 
 Given the existence of other very good books suitable for a course on compilers, why did I choose to write another one? There are several reasons:
@@ -296,7 +300,7 @@ If we want to allow negative numbers, we could add an optional minus sign:
 \end{enumerate}
 \end{enumerate}
 
-\chapter{Creating a Scanner from Regular Expressions}
+\chapter[Creating a Scanner]{Creating a Scanner from Regular Expressions}
 
 To specify a scanner for a compiler, a developer could specify a regular expression for each token type. But how do you go from that specification to code that can actually process the input? This chapter discusses the algorithms used to convert regular expressions into a scanner. The general process is to convert the regular expression into a finite automaton. The finite automaton can then be evaluated using a simple table look-up on each character.
 
@@ -386,12 +390,13 @@ NFA's aren't any more powerful than DFA's--anything you can do with an NFA you c
 
 The first step in converting a regular expression to executable code is to convert it to an equivalent NFA. For this conversion, we are going to use Thompson's Construction\footnote{Credited to Ken Thompson, the originator of the Unix operating system.}. The beauty of Thompson's construction is that it is a mechanical process -- one that doesn't require any creative thought. In other words, it can be automated. A computer program can be written to perform this conversion.
 
-If two FA's each have a single start state and a single final state, and if the start state doesn't have any inbound edges and the final state doesn't have any outbound edges, then the two FA's can be composed by connecting the end state of one FA to the start state of the other using a $\Lambda$ transition. Thompson's Construction makes use of this fact by creating composed FA's for each operation supported by regular expressions (concatenation, alternation, and Kleene Closure). An NFA can be built for any regular expression simply by composing it one small piece at a time using Thompson's three diagrams. Figure~\ref{F.Thompsons} shows the three base diagrams.
-
 %----------------------------------------------------------
-\begin{figure}[hbt]
+\begin{figure}[htb]
 \centering
 
+%\scalebox{.7}{
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
 \begin{tikzpicture}
 \fastart {0, 0};
 \fanonterminalnode {2,0} {a};
@@ -404,10 +409,16 @@ If two FA's each have a single start state and a single final state, and if the 
 \fatransition{b}{c}{$\Lambda$};
 \fatransition{c}{d}{FA 2};
 
-\node at (5,-1) {Concatenation};
-\node at (5,-2) {};
+%\node at (5,-1) {Concatenation};
+%\node at (5,-2) {};
 \end{tikzpicture}
+\caption{Concatenation}\label{F.Thompsons.Concatenation}
+\end{subfigure}
+%}
 
+%\scalebox{.7}{
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
 \begin{tikzpicture}
 \fastart {0, 0};
 \fanonterminalnode {2,0} {a};
@@ -425,11 +436,16 @@ If two FA's each have a single start state and a single final state, and if the 
 \fatransition{a}{d}{$\Lambda$};
 \fatransition{d}{e}{FA 2};
 \fatransition{e}{f}{$\Lambda$};
-
-\node at (5,-2) {Alternation};
-\node at (5,-3) {};
+%\node at (5,-2) {Alternation};
+%\node at (5,-3) {};
 \end{tikzpicture}
+%}
+\caption{Alternation}\label{F.Thompsons.Alternation}
+\end{subfigure}
 
+%\scalebox{.7}{
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
 %Kleene Closure
 \begin{tikzpicture}
 \fastart {0, 0};
@@ -445,84 +461,228 @@ If two FA's each have a single start state and a single final state, and if the 
 \faarctransition {a}{d}{$\Lambda$}{315}{225};
 \faarctransition {c}{b}{$\Lambda$}{105}{75};
 
-\node at (5,-2) {Kleene Closure};
-\node at (5,-3) {};
+%\node at (5,-2) {Kleene Closure};
+%\node at (5,-3) {};
 \end{tikzpicture}
+%}
+\caption{Kleene Closure}\label{F.Thompsons.KleeneClosure}
+\end{subfigure}
 
  \caption[Thompson's Construction]{Thompson's Construction method makes use of these three diagrams. For each diagram, the FA(s) being composed are represented as two nodes (the start and end nodes) labeled $FA$, $FA 1$, or $FA 2$.}
   \label{F.Thompsons}
 \end{figure}
 %----------------------------------------------------------
 
+If two FA's each have a single start state and a single final state, and if the start state doesn't have any inbound edges and the final state doesn't have any outbound edges, then the two FA's can be composed by connecting the end state of one FA to the start state of the other using a $\Lambda$ transition. Thompson's Construction makes use of this fact by creating composed FA's for each operation supported by regular expressions (concatenation, alternation, and Kleene Closure). An NFA can be built for any regular expression simply by composing it one small piece at a time using Thompson's three diagrams. Figure~\ref{F.Thompsons} shows the three base diagrams.
+
 The trick to using Thompson's construction is to NOT be creative. Each FA built with Thompson's has a single start and a single final state. The diagram can be dropped as-is directly into the next step in the construction. Nodes never need to be erased, and each composition should be drawn exactly as shown in Figure~\ref{F.Thompsons}.
 
-Let's illustrate by doing several constructions. First, let's construct an NFA for \texttt{a (b | c)}. It's best to start with the inner most operation (in this case \texttt{(b | c)}) and work out. So first draw the alternation diagram, and then drop the resulting diagram into the concatenation diagram. This is illustrated in Figure~\ref{F.ThompsonsExample1}.
+Let's illustrate by doing several constructions. First, let's construct an NFA for \texttt{a (b | c)}. It's best to start with the inner most operation (in this case \texttt{(b | c)}) and work out. So first draw the alternation diagram as shown below:
 
-%----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-
+\begin{center}
+\scalebox{.7}{
 \begin{tikzpicture}
 \fastart {0, 0};
-\fanonterminalnode {2,0} {a};
+\fanonterminalnode {2,0} {x};
 \fanolabel {4,1} {b1};
 \fanolabel {6,1} {b2};
 \fanolabel {4,-1} {c1};
 \fanolabel {6,-1} {c2};
-\faterminalnode {8,0} {b};
+\faterminalnode {8,0} {y};
 
-\fatransition{start}{a}{};
-\fatransition{a}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{b};
-\fatransition{b2}{b}{$\Lambda$};
+\fatransition{start}{x}{};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
 
-\fatransition{a}{c1}{$\Lambda$};
+\fatransition{x}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
-\fatransition{c2}{b}{$\Lambda$};
+\fatransition{c2}{y}{$\Lambda$};
 
 \node at (5,-2) {\texttt{(b | c)}};
 \node at (5,-3) {};
 \end{tikzpicture}
+} % end scaled box
+\end{center}
+The resulting diagram gets dropped into the \code{FA 2} position of the concatenation diagram as illustrated below. Note how the node labeled $x$ in the above diagram is in the location of the node labeled $c$ in the concatenation diagram, and the $y$ node is in the $d$ position.
 
+\begin{center}
+\scalebox{.7}{
 \begin{tikzpicture}
 \fastart {0, 0};
 \fanonterminalnode {2,0} {s};
 \fanolabel {4,0} {a1};
 
-\fanolabel {6,0} {a};
+\fanonterminalnode {6,0} {x};
 \fanolabel {8,1} {b1};
 \fanolabel {10,1} {b2};
 \fanolabel {8,-1} {c1};
 \fanolabel {10,-1} {c2};
-\faterminalnode {12,0} {b};
+\faterminalnode {12,0} {y};
 
 \fatransition{start}{s}{};
 \fatransition{s}{a1}{a};
-\fatransition{a1}{a}{$\Lambda$};
+\fatransition{a1}{x}{$\Lambda$};
 
 
-\fatransition{a}{b1}{$\Lambda$};
-\fatransition{b1}{b2}{b};
-\fatransition{b2}{b}{$\Lambda$};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
 
-\fatransition{a}{c1}{$\Lambda$};
+\fatransition{x}{c1}{$\Lambda$};
 \fatransition{c1}{c2}{c};
-\fatransition{c2}{b}{$\Lambda$};
+\fatransition{c2}{y}{$\Lambda$};
 
 \node at (7,-2) {\texttt{a (b | c)}};
 \node at (7,-3) {};
 \end{tikzpicture}
+} % end scalebox
+\end{center}
 
- \caption[Thompson's Construction for \texttt{a (b | c)}]{Thompson's Construction for \texttt{a (b | c)}. Note that in the second step, the Nodes $a$ and $b$ from the first step are dropped into the position of Nodes $c$ and $d$ for the concatenation construction.}
-  \label{F.ThompsonsExample1}
-\end{figure}
-%----------------------------------------------------------
+As a second example, let's construct an NFA for \texttt{a (b | c)*}. This is the same as the previous example, except that the alternation is wrapped in Kleene Closure. The alternation is, again, the innermost operation, and it is the same as in the previous example:
 
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {x};
+\fanolabel {4,1} {b1};
+\fanolabel {6,1} {b2};
+\fanolabel {4,-1} {c1};
+\fanolabel {6,-1} {c2};
+\faterminalnode {8,0} {y};
 
-zzz
+\fatransition{start}{x}{};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
+
+\fatransition{a}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{y}{$\Lambda$};
+
+\node at (5,-2) {\texttt{(b | c)}};
+%\node at (5,-3) {};
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+This is now dropped into the Kleene Closure construction:
+
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {t}
+\fanonterminalnode {4,0} {x};
+\fanolabel {6,1} {b1};
+\fanolabel {8,1} {b2};
+\fanolabel {6,-1} {c1};
+\fanolabel {8,-1} {c2};
+\fanonterminalnode {10,0} {y};
+\faterminalnode {12,0} {u};
+
+\fatransition{start}{t}{};
+\fatransition{t}{x}{$\Lambda$};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
+
+\fatransition{x}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{y}{$\Lambda$};
+
+\fatransition{y}{u}{$\Lambda$};
+
+\faarctransition {t}{u}{$\Lambda$}{315}{225};
+\faarctransition {y}{x}{$\Lambda$}{105}{75};
+
+\node at (7,-3) {\texttt{(b | c)*}};
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+Finally, we drop this into the concatenation construction:
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {a}
+\fanonterminalnode {4,0} {t}
+\fanonterminalnode {6,0} {x};
+\fanolabel {8,1} {b1};
+\fanolabel {10,1} {b2};
+\fanolabel {8,-1} {c1};
+\fanolabel {10,-1} {c2};
+\fanonterminalnode {12,0} {y};
+\faterminalnode {14,0} {u};
+
+\fatransition{start}{s}{};
+\fatransition{s}{t}{$\Lambda$};
+\fatransition{t}{x}{$\Lambda$};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
+
+\fatransition{x}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{y}{$\Lambda$};
+
+\fatransition{y}{u}{$\Lambda$};
+
+\faarctransition {t}{u}{$\Lambda$}{315}{225};
+\faarctransition {y}{x}{$\Lambda$}{105}{75};
+
+\node at (8,-3) {\texttt{a (b | c)*}};
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+As a third example, \texttt{a* (b | c)}, includes a concatenation of two complex item (\texttt{a*} and \texttt{(b | c)} ). To construct this, first construct \texttt{a*}, then construct \texttt{(b | c)} and then use the concatenation construction to combine them. Here are the results:
+
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {t};
+\fanolabel {4,0} {b};
+\fanolabel {6,0} {c};
+\fanonterminalnode {8,0} {u};
+
+\fatransition{start}{t}{};
+\fatransition{t}{b}{$\Lambda$};
+\fatransition{b}{c}{FA};
+\fatransition{c}{u}{$\Lambda$};
+\faarctransition {a}{u}{$\Lambda$}{315}{225};
+\faarctransition {c}{b}{$\Lambda$}{105}{75};
+
+\fanonterminalnode {10,0} {x};
+\fanolabel {12,1} {b1};
+\fanolabel {14,1} {b2};
+\fanolabel {12,-1} {c1};
+\fanolabel {14,-1} {c2};
+\faterminalnode {16,0} {y};
+
+\fatransition{u}{x}{$\Lambda$};
+\fatransition{x}{b1}{$\Lambda$};
+\fatransition{b1}{b2}{y};
+\fatransition{b2}{y}{$\Lambda$};
+
+\fatransition{x}{c1}{$\Lambda$};
+\fatransition{c1}{c2}{c};
+\fatransition{c2}{y}{$\Lambda$};
+
+\node at (8,-2) {\texttt{a* (b | c)}};
+%\node at (5,-3) {};
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+It should be clear that Thompson's construction creates lots of $\Lambda$ transitions. This should be the question, ``isn't there an simpler way to draw these?''. The answer is in two parts. If by ``simpler'' you mean ``easier construction'', my answer would be ``no''. The whole point of Thompson's construction is that it is a simple mechanical process. It requires no creative thought. But if by ``simpler'' you mean a less complex result (one without all the $\Lambda$s), then the answer is ``yes''. The next section gives an algorithm to convert these complex NFAs into DFAs (diagrams without any $\Lambda$ transitions. The goal is not to make the diagram simpler, the goal is to get a DFA because they are easier to process in code.
 
 \section{Subset Construction}
 
+zzz
 This section presents the Subset Construction
 
 \chapter{Scanner Code}
