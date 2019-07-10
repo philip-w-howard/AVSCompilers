@@ -79,13 +79,14 @@ breaklines=true,                % sets automatic line breaking
 
 %---------------------------------------------------
 % commands for drawing FAs
+\usetikzlibrary{arrows.meta} % to specify arrow size in transition commands.
 \newcommand{\faterminalnode}[3] {\draw (#1) circle [radius=9pt]; \node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fastart}[1] {\coordinate (start) at (#1);}
 \newcommand{\fanonterminalnode}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {#2};}
 \newcommand{\fanolabel}[2] {\node at (#1) (#2) [circle, draw, minimum size=24pt] {};}
-\newcommand{\fatransition}[3] {\draw [->] (#1) -- (#2) node [midway, above] {#3};}
-\newcommand{\farighttransition}[3] {\draw [->] (#1) -- (#2) node [midway, right] {#3};}
-\newcommand{\faarctransition}[5] {\draw [->] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
+\newcommand{\fatransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, above] {#3};}
+\newcommand{\farighttransition}[3] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) -- (#2) node [midway, right] {#3};}
+\newcommand{\faarctransition}[5] {\draw [-{Latex[length=3mm,width=2.5mm]}] (#1) to[out=#4, in=#5] node  [midway, above] {#3} (#2) ;}
 %---------------------------------------------------
 
 \usepackage{mdwlist}
@@ -280,9 +281,9 @@ If we want a regular expression for integer constants, we could try
 but this allows any number of leading zeros. A better expression would be:
 \begin{quote}\texttt{[1-9][0-9]*}\end{quote}
 This fixes the leading zero problem, but it doesn't allow the number zero. This can be fixed as follows:
-\begin{quote}\texttt{0+([1-9][0-9]*)}\end{quote}
+\begin{quote}\texttt{0 | ([1-9][0-9]*)}\end{quote}
 If we want to allow negative numbers, we could add an optional minus sign:
-\begin{quote}\texttt{0+(-?[1-9][0-9]*)}\end{quote}
+\begin{quote}\texttt{0 | (-?[1-9][0-9]*)}\end{quote}
 
 \textbf{Exercises}
 
@@ -759,9 +760,306 @@ We need a formal algorithm for producing these tables. The steps are as follows:
 \end{enumerate}
 The process will stop once all existing rows are filled in and no new rows get generated.
 
-zzz
+Let's use these rules to derive a table for the NFA below. Note: this NFA was \textbf{not} generated with Thompson's.
+
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {1};
+\fanonterminalnode {4,0} {2};
+\fanonterminalnode {6,0} {3};
+\fanonterminalnode {8,0} {4};
+\fanonterminalnode {4,2} {5};
+\fanonterminalnode {6,2} {6};
+\faterminalnode {10,0} {7};
+
+\fatransition{start}{1}{};
+\fatransition{1}{2}{$\Lambda$};
+\fatransition{2}{3}{a};
+\fatransition{3}{4}{b};
+\farighttransition{3}{6}{$\Lambda$};
+\fatransition{4}{7}{c};
+\fatransition{1}{5}{a};
+\fatransition{5}{6}{c};
+\farighttransition{5}{2}{b};
+\fatransition{6}{4}{a};
+\faarctransition {4}{1}{$\Lambda$}{225}{315};
+
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+Step~1 yields states 1 and 2, so this set becomes meta-state-$A$. There are three letters in the source language (a, b, c), so this yields the following rows:
+
+\begin{center}
+\small
+\begin{tabular}{l|l|l|l}
+\hline
+\textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+A & 1, 2 & a &  \\
+A & 1, 2 & b &  \\
+A & 1, 2 & c &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Completing the first row, we can follow an $a$ from state 1 to 5, and from state 2 to 3. Add these two states to the resulting states column, and then follow the $\Lambda$s adding state 6. Label the set \texttt{ \{3, 5, 6\}} as meta-state~$B$ and add rows to the table:
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b &  \\
+3 & A & 1, 2 & c &  \\
+4 & B & 3, 5, 6 & a &  \\
+5 & B & 3, 5, 6 & b &  \\
+6 & B & 3, 5, 6 & c &  \\
+
+\hline
+\end{tabular}
+\end{center}
+
+Completing rows 2 and 3, there are no $b$ nor $c$ transitions out of any of the states in meta-state~$A$, so the resulting states for both of these rows are empty.
+
+Moving on to row 4, we can follow an $a$ from state 6 to state 4. We can then follow $\Lambda$s from 4 to 1 and 1 to 2 yielding meta-state $C$ containing states 1, 2, 4.
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b & - \\
+3 & A & 1, 2 & c & - \\
+4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
+5 & B & 3, 5, 6 & b & \\
+6 & B & 3, 5, 6 & c & \\
+7 & C & 1, 2, 4 & a & \\
+8 & C & 1, 2, 4 & b & \\
+9 & C & 1, 2, 4 & c & \\
+\hline
+\end{tabular}
+\end{center}
+
+For row 5, we can follow a $b$ from 3 to 4 and from 5 to 2. There are no $\Lambda$s from either 2 or 4, so meta-state~$D$ contains 2 and 4.
+
+For row 6, we can follow a $c$ from 5 to 6. There are no $\Lambda$s from 6, so meta-state~$E$ contains only 6. Adding these new rows to the table, we have:
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b & - \\
+3 & A & 1, 2 & c & - \\
+4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
+5 & B & 3, 5, 6 & b & D = 2, 4 \\
+6 & B & 3, 5, 6 & c & E = 6 \\
+7 & C & 1, 2, 4 & a & \\
+8 & C & 1, 2, 4 & b & \\
+9 & C & 1, 2, 4 & c & \\
+10 & D & 2, 4 & a & \\
+11 & D & 2, 4 & b & \\
+12 & D & 2, 4 & c & \\
+13 & E & 6 & a & \\
+14 & E & 6 & b & \\
+15 & E & 6 & c & \\
+\hline
+\end{tabular}
+\end{center}
+
+Completing row 10, we can follow an $a$ from 1 to 5 and 2 to 3. The $\Lambda$ closure adds 6. This set of states is already labeled $B$, so we don't need to add any rows to the table.
+
+For Row 11, there are no outbound edges on $b$ so the resulting states is empty.
+
+For Row 12, we can follow a $c$ from 4 to 7. This new meta-state is labeled $F$.
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b & - \\
+3 & A & 1, 2 & c & - \\
+4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
+5 & B & 3, 5, 6 & b & D = 2, 4 \\
+6 & B & 3, 5, 6 & c & E = 6 \\
+7 & C & 1, 2, 4 & a & B\\
+8 & C & 1, 2, 4 & b & -\\
+9 & C & 1, 2, 4 & c & F = 7 \\
+10 & D & 2, 4 & a & \\
+11 & D & 2, 4 & b & \\
+12 & D & 2, 4 & c & \\
+13 & E & 6 & a & \\
+14 & E & 6 & b & \\
+15 & E & 6 & c & \\
+16 & F & 7 & a & \\
+17 & F & 7 & b & \\
+18 & F & 7 & c & \\
+\hline
+\end{tabular}
+\end{center}
+
+For row 10, we can follow the a from 2 to 3 and then the $\Lambda$ to 6. This is meta-state~$G$.
+
+For row 11, there are no outbound transitions on $b$, so the resulting states is empty.
+
+For row 12, we can follow a $c$ from 4 to 7. This is already labeled $F$.
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b & - \\
+3 & A & 1, 2 & c & - \\
+4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
+5 & B & 3, 5, 6 & b & D = 2, 4 \\
+6 & B & 3, 5, 6 & c & E = 6 \\
+7 & C & 1, 2, 4 & a & B\\
+8 & C & 1, 2, 4 & b & -\\
+9 & C & 1, 2, 4 & c & F = 7 \\
+10 & D & 2, 4 & a & G = 3, 6\\
+11 & D & 2, 4 & b & - \\
+12 & D & 2, 4 & c & F \\
+13 & E & 6 & a & \\
+14 & E & 6 & b & \\
+15 & E & 6 & c & \\
+16 & F & 7 & a & \\
+17 & F & 7 & b & \\
+18 & F & 7 & c & \\
+19 & G & 3, 6 & a & \\
+20 & G & 3, 6 & b & \\
+21 & G & 3, 6 & c & \\
+\hline
+\end{tabular}
+\end{center}
+
+For Row 13, we can follow an $a$ from 6 to 4 and then $\Lambda$s to 1 and 2. This is already labeled $C$.
+
+For Rows 13-18, there are no available outbound transitions, so the resulting states are empty.
+
+The transitions for Row 19 are the same as for Row 13, so the result is $C$.
+
+For Row 20, we can follow a $b$ from 3 to 4 and then $\Lambda$s give us meta-state $C$.
+
+For Row 21, there are no outbound transitions on $c$ so the resulting state is empty.
+
+This gives us the following table:
+
+\begin{center}
+\small
+\begin{tabular}{c|l|l|l|l}
+\hline
+& \textbf{meta-state} & \textbf{NFA states} & \textbf{input} & \textbf{resulting states} \\
+\hline
+1 & A & 1, 2 & a & B = 3, 5, 6 \\
+2 & A & 1, 2 & b & - \\
+3 & A & 1, 2 & c & - \\
+4 & B & 3, 5, 6 & a & C = 1, 2, 4 \\
+5 & B & 3, 5, 6 & b & D = 2, 4 \\
+6 & B & 3, 5, 6 & c & E = 6 \\
+7 & C & 1, 2, 4 & a & B\\
+8 & C & 1, 2, 4 & b & -\\
+9 & C & 1, 2, 4 & c & F = 7 \\
+10 & D & 2, 4 & a & G = 3, 6\\
+11 & D & 2, 4 & b & - \\
+12 & D & 2, 4 & c & F \\
+13 & E & 6 & a & C\\
+14 & E & 6 & b & - \\
+15 & E & 6 & c & - \\
+16 & F & 7 & a & - \\
+17 & F & 7 & b & - \\
+18 & F & 7 & c & - \\
+19 & G & 3, 6 & a & C \\
+20 & G & 3, 6 & b & C\\
+21 & G & 3, 6 & c & - \\
+\hline
+\end{tabular}
+\end{center}
+
+All rows are filled in, so we are done.
+
+\textbf{Important note:} The procedure is to follow the input out of the NFA states and then follow the $\Lambda$s. A common mistake is to follow the $\Lambda$s out of the NFA states. For example, when filling out the last row, even though there is a $\Lambda$ from state 3, we don't follow it because we are only looking for transitions on $c$.
+
+The subset construction was supposed to turn an NFA into a DFA, but it appears to have just produced a table. We can take the information in our final table from the example we just completed and summarize it as follows:
+
+\begin{center}
+\small
+\begin{tabular}{l|l|l}
+\hline
+\textbf{From} & \textbf{transition on} & \textbf{To} \\
+\hline
+A & a & B \\
+B & a & C \\
+B & b & D \\
+B & c & E \\
+C & a & B\\
+C & c & F \\
+D & a & G \\
+D & c & F \\
+E & a & C\\
+G & a & C \\
+G & b & C\\
+\hline
+\end{tabular}
+\end{center}
+
+This is known as a transition table. It is fairly straight forward to convert this table into a DFA (and a DFA into a transition table). Create states for each state in the table (the union of the From and To columns). The start state is always $A$, and any meta-state that included a final state in the original NFA is a final state in the DFA (in this case State~$F$). The resulting DFA is as follows:
+
+\begin{center}
+\scalebox{.7}{
+\begin{tikzpicture}
+\fastart {0, 0};
+\fanonterminalnode {2,0} {A};
+\fanonterminalnode {4,0} {B};
+\fanonterminalnode {6,0} {C};
+\fanonterminalnode {6,-4} {D};
+\fanonterminalnode {5,2} {E};
+\faterminalnode    {8,0} {F};
+\fanonterminalnode {6,-2} {G};
+
+\fatransition{start}{A}{};
+\fatransition{A}{B}{a};
+\fatransition{B}{C}{a};
+\fatransition{C}{F}{c};
+\fatransition{C}{F}{c};
+%\faarctransition{B}{D}{b}{270}{180};
+\fatransition{B}{D}{b};
+\farighttransition{D}{G}{a};
+\farighttransition{G}{C}{a,b};
+%\faarctransition{D}{F}{c}{0}{270};
+\fatransition{D}{F}{c};
+\farighttransition{B}{E}{c};
+\fatransition{E}{C}{a};
+\faarctransition {C}{B}{a}{225}{315};
+
+\end{tikzpicture}
+} % end scaled box
+\end{center}
+
+Does the subset construction always result in a DFA, or might it result in another NFA? The answer is that it always results in a DFA for the following two reasons:
+\begin{enumerate}
+\item The \emph{input} column never has $\Lambda$s, so the resulting FA will not have any $\Lambda$ transitions.
+\item When generating rows, each meta-state has exactly one row for each input character. As a result, there will never be multiple outbound transitions for the same character.
+\end{enumerate}
+The result is that the resulting FA has no non-determinism and is therefore a DFA.
 
 \chapter{Scanner Code}
+zzz
+
 \section{table driven}
 Here is a table driven scanner
 \section{switch statement}
