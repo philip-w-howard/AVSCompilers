@@ -341,7 +341,7 @@ Two conditions can cause a string to be rejected:
 
 Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \texttt{(yt)* (x | yz)}
 
-\subsection{Non-deterministic Finite Automota}
+\subsection{Non-deterministic Finite Automata}
 
 The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
 \begin{enumerate}
@@ -994,9 +994,12 @@ All rows are filled in, so we are done.
 
 \textbf{Important note:} The procedure is to follow the input out of the NFA states and then follow the $\Lambda$s. A common mistake is to follow the $\Lambda$s out of the NFA states. For example, when filling out the last row, even though there is a $\Lambda$ from state 3, we don't follow it because we are only looking for transitions on $c$.
 
-The subset construction was supposed to turn an NFA into a DFA, but it appears to have just produced a table. We can take the information in our final table from the example we just completed and summarize it as follows:
+The subset construction was supposed to turn an NFA into a DFA, but it appears to have just produced a table. We can take the information in our final table from the example we just completed and summarize it in Figure~\ref{F.transitionTable}.
 
-\begin{center}
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+
 \small
 \begin{tabular}{l|l|l}
 \hline
@@ -1015,7 +1018,10 @@ G & a & C \\
 G & b & C\\
 \hline
 \end{tabular}
-\end{center}
+\caption[Transition table for DFA]{A summary of the table derived in this section. Each row contains the start state, and input character, and the resulting state if that character is found while in the start state.}
+  \label{F.transitionTable}
+\end{figure}
+%----------------------------------------------------------
 
 This is known as a transition table. It is fairly straight forward to convert this table into a DFA (and a DFA into a transition table). Create states for each state in the table (the union of the From and To columns). The start state is always $A$, and any meta-state that included a final state in the original NFA is a final state in the DFA (in this case State~$F$). The resulting DFA is as follows:
 
@@ -1055,15 +1061,67 @@ Does the subset construction always result in a DFA, or might it result in anoth
 \item The \emph{input} column never has $\Lambda$s, so the resulting FA will not have any $\Lambda$ transitions.
 \item When generating rows, each meta-state has exactly one row for each input character. As a result, there will never be multiple outbound transitions for the same character.
 \end{enumerate}
-The result is that the resulting FA has no non-determinism and is therefore a DFA.
+The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Scanner Code}
+The previous chapter presented algorithms for converting an arbitrary regular express into a transition table for a deterministic finite automata. The next question is, what do we do with that table? This chapter answers that question.
+
+\section{Processing Transition Tables}\label{S.ScannerCode}
+A DFA is a state diagram, and the transition table can be used as a lookup table for performing state transitions. Before showing the code for processing the lookup table, let's make one more modification to the table presented in Figure~\ref{F.transitionTable}. Instead of one row for each state-input combination, we will present the table as one row per state, and one column for each input possibility. Here is the result:
+
+\begin{center}
+\small
+\begin{tabular}{l|c|c|c}
+\hline
+\textbf{State} & \textbf{a} & \textbf{b} & \textbf{c} \\
+\hline
+A & B & - & - \\
+B & C & D & C \\
+C & B & - & F \\
+D & G & - & F \\
+E & C & - & - \\
+G & C & C & - \\
+\hline
+\end{tabular}
+\end{center}
+
+This table can be represented as a 2D array. The left-most column does not need to be stored as it simply gives the row index (converting from letters to suitable numbers). The current state is used as the row index and the just-read character is used as the column index. This results in the code in Listing~\ref{L.transitionTable}.
+
+\begin{mylisting}
+\centering
+\begin{verbatim}
+1  state = 0;
+2  while (more_input_available)
+3  {
+4     input = next_character();
+5  	 state = table[state][input];
+6  }
+7  if (state == final_state) 
+8     return found;
+9  else
+10     return not_found;
+\end{verbatim}
+\caption{Pseudo-code for processing a transition table.}
+\label{L.transitionTable}
+\end{mylisting}
+
+This code makes some problematic simplifying assumptions. First of all, how should the code deal with non-existent transitions (all the dashes in the table)? A simply solution is to add an error state to the table. All the dashes get changed to that error state, and all the columns for that error state return back to the same state: once you're in the error state, you're stuck there.
+
+The second problem is that the table only has three columns one each for the three input characters. How do you convert from the character read (probably a number in ASCII or Unicode). There are several possible solutions. If the compiled language is defined over ASCII characters (particularly if it is 7-bit ASCII) then the table can be extended to have a row for each possible input character. 
+
+With Unicode, this is less workable. For UTF-8 a similar scheme could be used, but the table would need additional rows to handle multi-byte characters. For UTF-16 or larger, the transition table would be so large, it would likely be unworkable. It would be possible to convert the UTF-16 to UTF-8 (they both encode the complete Unicode character set) and then use a 256 column wide table. This would cost the compiler time at the expense of a potentially smaller table.
+
+Since this is A Very Simple compiler book, I will not delve into character conversions. Instead I'll assume the compiled language can use (or convert to) a reasonable sized character set.
+
+\subsection{Replacing the table with code}
+
+There are many space/speed trade-offs in computer algorithms (such as executing code to convert from UTF-16 to UTF-8 to have a narrower transition table). There are also trade-offs between code size and data size. The code presented in Listing~\ref{L.transitionTable} was very compact, but it required a potentially large data table. 
+
 zzz
 
-\section{table driven}
-Here is a table driven scanner
-\section{switch statement}
-Here is a table drive scanner
+\section{Processing multiple regular expressions}\label{S.MultiScanner}
+Algorithm for multiple RE's
 
 \chapter{Automatically Generated Scanners}
 here is a description of flex.
