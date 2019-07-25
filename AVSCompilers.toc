@@ -15,25 +15,28 @@
 \contentsline {chapter}{\numberline {6}Scanner Code}{30}
 \contentsline {section}{\numberline {6.1}Processing Transition Tables}{30}
 \contentsline {subsection}{\numberline {6.1.1}Replacing the table with code}{32}
-\contentsline {section}{\numberline {6.2}Processing multiple regular expressions}{32}
-\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{33}
-\contentsline {part}{III\hspace {1em}Parsing}{34}
-\contentsline {chapter}{\numberline {8}Context Free Grammars}{35}
-\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{36}
-\contentsline {chapter}{\numberline {10}Bottom-up parsers}{37}
-\contentsline {chapter}{\numberline {11}Automatically generated parsers}{38}
-\contentsline {part}{IV\hspace {1em}Semantic Processing}{39}
-\contentsline {chapter}{\numberline {12}Syntax vs. Semantics}{40}
-\contentsline {chapter}{\numberline {13}Type systems}{41}
-\contentsline {chapter}{\numberline {14}Implementation details}{42}
-\contentsline {part}{V\hspace {1em}The Back-end}{43}
-\contentsline {chapter}{\numberline {15}The Visitor Pattern}{44}
-\contentsline {chapter}{\numberline {16}Code generation}{45}
-\contentsline {chapter}{\numberline {17}Optimization}{46}
-\contentsline {subsubsection}{Subsubsection}{46}
-\contentsline {paragraph}{Subsubsubsection}{46}
-\contentsline {subparagraph}{Subsubsubsubsection}{46}
-\contentsline {section}{\numberline {17.1}Theorem-Like Environments}{47}
-\contentsline {chapter}{\numberline {A}The First Appendix}{49}
-\contentsline {chapter}{\numberline {B}The Second Appendix}{50}
-\contentsline {chapter}{Afterword}{52}
+\contentsline {subsection}{\numberline {6.1.2}Performance considerations}{32}
+\contentsline {subsubsection}{Implementation size}{34}
+\contentsline {subsubsection}{Locality of Reference}{35}
+\contentsline {section}{\numberline {6.2}Processing multiple regular expressions}{35}
+\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{36}
+\contentsline {part}{III\hspace {1em}Parsing}{37}
+\contentsline {chapter}{\numberline {8}Context Free Grammars}{38}
+\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{39}
+\contentsline {chapter}{\numberline {10}Bottom-up parsers}{40}
+\contentsline {chapter}{\numberline {11}Automatically generated parsers}{41}
+\contentsline {part}{IV\hspace {1em}Semantic Processing}{42}
+\contentsline {chapter}{\numberline {12}Syntax vs. Semantics}{43}
+\contentsline {chapter}{\numberline {13}Type systems}{44}
+\contentsline {chapter}{\numberline {14}Implementation details}{45}
+\contentsline {part}{V\hspace {1em}The Back-end}{46}
+\contentsline {chapter}{\numberline {15}The Visitor Pattern}{47}
+\contentsline {chapter}{\numberline {16}Code generation}{48}
+\contentsline {chapter}{\numberline {17}Optimization}{49}
+\contentsline {subsubsection}{Subsubsection}{49}
+\contentsline {paragraph}{Subsubsubsection}{49}
+\contentsline {subparagraph}{Subsubsubsubsection}{49}
+\contentsline {section}{\numberline {17.1}Theorem-Like Environments}{50}
+\contentsline {chapter}{\numberline {A}The First Appendix}{52}
+\contentsline {chapter}{\numberline {B}The Second Appendix}{53}
+\contentsline {chapter}{Afterword}{55}

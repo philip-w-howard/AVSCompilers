@@ -1116,7 +1116,59 @@ Since this is A Very Simple compiler book, I will not delve into character conve
 
 \subsection{Replacing the table with code}
 
-There are many space/speed trade-offs in computer algorithms (such as executing code to convert from UTF-16 to UTF-8 to have a narrower transition table). There are also trade-offs between code size and data size. The code presented in Listing~\ref{L.transitionTable} was very compact, but it required a potentially large data table. 
+There are many space/speed trade-offs in computer algorithms (such as executing code to convert from UTF-16 to UTF-8 to have a narrower transition table). There are also trade-offs between code size and data size. The code presented in Listing~\ref{L.transitionTable} was very compact, but it required a potentially large data table. There is an alternative implementation that requires very little data, but a large amount of code. This is illustrated in Listing~\ref{L.switchStatement}.
+
+\begin{mylisting}
+\centering
+\begin{verbatim}
+1  state_0:
+2  input = next_character();
+3  switch (input)
+4  {
+5  	  case 'a': goto state_1;
+6     case 'b': goto state_2;
+7     case 'c': goto state_done;
+8     default:  goto state_error;
+9  }
+10
+11  state_1:
+12  input = next_character();
+13  switch (input)
+14  {
+15     case 'x': goto state_0;
+16     case 'b': goto state_5;
+17     case EOF: goto state_done;
+18     default:  goto state_error;
+19  }
+    ...
+\end{verbatim}
+\caption{Alternative pseudo-code for processing a transition table. This just a sample to illustrate the form of the code. The actual \code{switch} statements would be determined based on the transition table.}
+\label{L.switchStatement}
+\end{mylisting}
+
+This version of the code uses \code{switch} statements to move from state to state. Essentially, each row of the transition table is encoded into a \code{switch} statement. \code{goto} statements\footnote{Normally, \code{goto} statements are considered an unforgivable evil in code. This is one of the few instances were they are useful, and not evil} are used to jump to the block of code that handles the new state.
+
+One advantage of this implementation is that the code (and data) is not affected by large character sets. Each \code{switch} statement only has branches for characters that matter. Any unused characters in the character set will not appear in the code. The flip side of this is that if there are states that can handle a large number of characters (for example, the regular expression for an identifier in a UNICODE language could include any of a very large number of characters) would require a large number of \code{case} branches.
+
+\subsection{Performance considerations}\label{S.scannerperformance}
+So, which of these two implementations is better. The short answer is: that depends.
+
+The first consideration is how efficiently the implementation language implements a \code{switch} statement. If the \code{switch} statements are translated to an equivalent \code{if elsif else} statement, then there is likely little advantage to the \code{switch} form of implementation. For the following discussion, we'll assume an efficient \code{switch} implementation.
+
+\subsubsection{Implementation size}\label{S.scannersize}
+If we consider the memory size required by the implementation, the following observations can be made:
+\begin{enumerate}
+\item The code for the transition table version is quite small. The size of the code does not change with the complexity of the language being scanned: the same code can process any transition table.
+\item The data table for the transition table version can be quite large. Its size depends on the number of characters in the character set for the language being compiled, and on the number of states that are required to implement the scanner.
+\item The code for the \code{switch} implementation can be very large. It depends on the number of states that are required to implement the scanner and also on the number of valid characters in each state.
+\item The data required for the \code{switch} implementation is small: a single integer to store the current character.
+\end{enumerate}
+
+If the transition table is sparse (few valid characters in each row), then the \code{switch} implementation may require less memory because the \code{switch} statements only include code for the necessary characters whereas the transition table version must store the entire table--even the cells for transitions that are invalid. However, if the table is dense (many valid characters in each (or many) rows, then the transition table version is likely to require less memory. Each valid entry in the table requires more code in the \code{switch} version, however the table size doesn't change with density in the transition table implementation.
+
+\subsubsection{Locality of Reference}\label{S.scannerlocality}
+
+blah blah blah
 
 zzz
 
