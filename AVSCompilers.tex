@@ -74,8 +74,12 @@ breaklines=true,                % sets automatic line breaking
 }
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
+\newcommand{\cfg}[2] {\indent \texttt{#1} $\rightarrow$ \texttt{#2}}
+
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
+
+\newcommand{\needswork}{\paragraph{This section needs work.}}
 
 %---------------------------------------------------
 % commands for drawing FAs
@@ -133,7 +137,7 @@ breaklines=true,                % sets automatic line breaking
 \frontmatter
 \title{A Very Simple Compiler Book}
 \author{Philip W. Howard}
-\date{2019}
+\date{\today}
 \maketitle
 \tableofcontents
 \listoffigures
@@ -206,7 +210,7 @@ To illustrate the first principle, if you had a program that output the numbers 
 
 The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
 
-This definition of a compiler is deliberately broad. A C preprocessor (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' coded.
+This definition of a compiler is deliberately broad. The preprocessor for a C compiler (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' code.
 
 \chapter{Compiler Structure}
 Compilers are typically broken into two broad pieces: the front-end and the back-end. The frond-end deals with language specific issues. The back-end deals with target machine specifics.
@@ -264,7 +268,7 @@ Regular expressions include the following features:
 	\item[Concatenation] Concatenation is gluing two strings end-to-end. For example, concatenating ``\texttt{ab}'' with ``\texttt{bc}'' yields the string ``\texttt{abcd}''.
   \item[Alternation] Alternation means to choose exactly one from a set of alternatives. Regular expressions use the vertical bar (\texttt{|}) to mean alternation. So the expression \texttt{a | b | c} means to choose either an '\texttt{a}', a '\texttt{b}', or a '\texttt{c}'.
 	\item[Grouping] Parenthesis can be used for grouping operations much as they can in algebraic expressions.
-	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk (\texttt{*}). So, for example, tt{x*} means zero or more '\texttt{x}' characters. Kleene Closure has higher precedence that concatenation so that \texttt{ab*} means \texttt{a(b*)} not \texttt{(ab)*}.
+	\item[Kleene Closure] Kleene Closure means to take zero or more instances of a string. Kleene Closure is denoted by an asterisk (\texttt{*}). So, for example, \texttt{x*} means zero or more '\texttt{x}' characters. Kleene Closure has higher precedence that concatenation so that \texttt{ab*} means \texttt{a(b*)} not \texttt{(ab)*}.
 \end{mydesc}
 
 In addition to these operations, the $\Lambda$ symbol is used to represent an empty string (a string with no characters in it).
@@ -280,7 +284,7 @@ If we want a regular expression for integer constants, we could try
 \begin{quote}\texttt{[0-9]+}\end{quote}
 but this allows any number of leading zeros. A better expression would be:
 \begin{quote}\texttt{[1-9][0-9]*}\end{quote}
-This fixes the leading zero problem, but it doesn't allow the number zero. This can be fixed as follows:
+This fixes the leading zero problem, but it does not allow the number zero. This can be fixed as follows:
 \begin{quote}\texttt{0 | ([1-9][0-9]*)}\end{quote}
 If we want to allow negative numbers, we could add an optional minus sign:
 \begin{quote}\texttt{0 | (-?[1-9][0-9]*)}\end{quote}
@@ -384,7 +388,7 @@ The NFA in Figure~\ref{F.FA_2} accepts the following stings:
 	\item[$zy$] This string is accepted by using the $z$ to transition to Node~$d$ and then using the $y$ to transition to Node~$e$.
 \end{mydesc}
 
-NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{There are proofs of this statement, but they are normally left to a course on computer theory.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
+NFA's aren't any more powerful than DFA's--anything you can do with an NFA you can also do with a DFA\footnote{Section~Figure~\ref{S.Subset.Construction} gives a construction that can turn any NFA into an equivalent DFA. This is sufficient to argue that anything that can be done with an NFA can also be done with a DFA.}. The reason for introducing NFA's is that converting from a regular expression to code that accepts strings matching that regular expression makes use of NFA's.
 
 \section{Thompson's}
 
@@ -678,9 +682,9 @@ As a third example, \texttt{a* (b | c)}, includes a concatenation of two complex
 } % end scaled box
 \end{center}
 
-It should be clear that Thompson's construction creates lots of $\Lambda$ transitions. This should be the question, ``isn't there an simpler way to draw these?''. The answer is in two parts. If by ``simpler'' you mean ``easier construction'', my answer would be ``no''. The whole point of Thompson's construction is that it is a simple mechanical process. It requires no creative thought. But if by ``simpler'' you mean a less complex result (one without all the $\Lambda$s), then the answer is ``yes''. The next section gives an algorithm to convert these complex NFAs into DFAs (diagrams without any $\Lambda$ transitions. The goal is not to make the diagram simpler, the goal is to get a DFA because they are easier to process in code.
+It should be clear that Thompson's construction creates lots of $\Lambda$ transitions. This begs the question, ``isn't there an simpler way to draw these?''. The answer is in two parts. If by ``simpler'' you mean ``easier construction'', my answer would be ``no''. The whole point of Thompson's construction is that it is a simple mechanical process. It requires no creative thought. But if by ``simpler'' you mean a less complex result (one without all the $\Lambda$s), then the answer is ``yes''. The next section gives an algorithm to convert these complex NFAs into DFAs (diagrams without any $\Lambda$ transitions. The goal is not to make the diagram simpler, the goal is to get a DFA because they are easier to process in code.
 
-\section{Subset Construction}
+\section{Subset Construction}\label{S.Subset.Construction}
 
 To illustrate how an NFA could be processed, let's consider again the NFA for \texttt{a* (b | c)} presented in the last section, but presented again in Figure~\ref{F.subsetNFA}. In this figure, each node is labeled so they can be explicitly referred to. For each state, we can ask the question, ``What states could I wind up in if I encounter a particular letter in the input?''. For example, suppose we haven't consumed any input yet, what states could we be in? Clearly we could be in State~$1$, the start state, but because of the $\Lambda$ transitions, we could also be in states $2, 4, 5, 6, 8$. This set of states ($=\{1, 2, 4, 5, 6, 8\}$)\footnote{When specifying sets of characters,  it is often easier to read the list of items if each item is separated with a comma. This works unless the set included a comma (as sets of characters for a compiler often do). I will generally included commas for readability unless the set of characters includes punctuation (commas or other punctuation marks). I hope this will improve readability.}
 forms a meta-state (let's call it $A$). From the meta-state~$A$, where could we wind up if we read an $a$. Since the meta-state~$A$ includes state~$2$, we can follow the $a$ to state~$3$. From there we can follow $\Lambda$s to $2, 4, 5, 6, 8$. This gives another meta-state. Let's call it $B = \{2, 3, 4, 5, 6, 8\}$. 
@@ -1168,52 +1172,85 @@ If the transition table is sparse (few valid characters in each row), then the \
 
 \subsubsection{Locality of Reference}\label{S.scannerlocality}
 
-blah blah blah
+\needswork{}
 
-zzz
 
 \section{Processing multiple regular expressions}\label{S.MultiScanner}
 Algorithm for multiple RE's
-
+\needswork{}
 \chapter{Automatically Generated Scanners}
 here is a description of flex.
+\needswork{}
 
 \part{Parsing} \label{part.parser}
+The scanner converts the input stream from a stream of characters into a stream of tokens. The parser tries to make sense of the stream of tokens. In particular, it answers the question, ``Does this sequence of tokens for a valid program?''
+
 \chapter{Context Free Grammars}
+Regular expressions are used to define the tokens a compiler processes. We also need a mechanism to define the syntax of the language a compiler processes. Context Free Grammars are used for this purpose.
+
+A Context Free Grammar (CFG) is made up a a list of productions of the form:
+
+\indent this symbol can be replaced by this collection of symbols
+
+A production in a CFG consists of a left hand side and a right hand side. The left hand side gives the symbol that can be replaced. The right hand side gives the list of symbols that can replace the symbol on the left. The two sides are typically separated 
+either by an arrow ( $\rightarrow$ ) 
+or sometimes a colon-colon-equals ( ::= ). 
+A sample production that indicates that the symbol \code{A} 
+can be replaced by \code{X Y Z} is given below:
+
+\cfg{A}{X Y Z}
+
+Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE. terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
+
+Here is a more complete CFG example. The productions have been numbered for easy reference.
+
+\begin{enumerate}
+\item \cfg{S}{a S b}
+\item \cfg{S}{$\lambda$}
+\end{enumerate}
+
+There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with \code{a S b}. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
+
+What can we do with this CFG? Let's do some derivations. Starting with the start symbol and Production 1, we can get the string \code{a S b}. If we then use Production 2, we are left with the string \code{a b}. Since there are no more non-terminals, we are done.
+
+What if we invoked Production 1 more than once? The first invocation produces \code{a S b}. The next invocation produces \code{aa S bb}. Each invocation adds another \code{a} and \code{b}. When we finally invoke Production 2, we are left with a string of \code{a}'s followed by the same number of \code{b}'s.
+
+zzz
 \chapter {Top-down recursive-descent parsers}
+\needswork{}
+
 \chapter {Bottom-up parsers}
+\needswork{}
+
 \chapter {Automatically generated parsers}
 Description of bison.
+\needswork{}
 
 \part {Semantic Processing}
+\needswork{}
+
 \chapter {Syntax vs. Semantics}
+\needswork{}
+
 \chapter {Type systems}
+\needswork{}
+
 \chapter {Implementation details}
+\needswork{}
 
 \part{The Back-end}
+\needswork{}
+
 \chapter {The Visitor Pattern}
+\needswork{}
+
 \chapter {Code generation}
+\needswork{}
+
 \chapter {Optimization}
+\needswork{}
 
-\subsubsection{Subsubsection}
-
-This is just some text under a subsubsection.
-
-\paragraph{Subsubsubsection}
-
-This is just some  text under a subsubsubsection.
-
-\subparagraph{Subsubsubsubsection}
-
-This is just some text under a subsubsubsubsection.
-
-
-\begin{itemize}
-\item Bullet item 1
-
-\item Bullet item 2
-
-\end{itemize}
+\part {\LaTeX sample code}
 
 \begin{description}
 \item[Description List] Each description list item has a term followed by the
@@ -1355,7 +1392,7 @@ for couple stresses}, Quart. Appl. Math., \textbf{25}, (1967), 139-146.
 \chapter{Afterword}
 
 The back matter often includes one or more of an index, an afterword,
-acknowledgements, a bibliography, a colophon, or any other similar item. In
+acknowledgments, a bibliography, a colophon, or any other similar item. In
 the back matter, chapters do not produce a chapter number, but they are
 entered in the table of contents. If you are not using anything in the back
 matter, you can delete the back matter TeX field and everything that follows it.

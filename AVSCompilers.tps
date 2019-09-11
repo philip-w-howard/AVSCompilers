@@ -17,8 +17,8 @@ Class=LaTeXView
 Document=AVSCompilers.tex
 
 [Frame0_View0,0]
-TopLine=1002
-Cursor=43539
+TopLine=1479
+Cursor=62652
 
 [SessionInfo]
 FrameCount=1
