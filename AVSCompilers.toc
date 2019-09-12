@@ -15,40 +15,41 @@
 \contentsline {chapter}{\numberline {6}Scanner Code}{30}
 \contentsline {section}{\numberline {6.1}Processing Transition Tables}{30}
 \contentsline {subsection}{\numberline {6.1.1}Replacing the table with code}{32}
-\contentsline {subsection}{\numberline {6.1.2}Performance considerations}{32}
-\contentsline {subsubsection}{Implementation size}{34}
-\contentsline {subsubsection}{Locality of Reference}{35}
+\contentsline {subsection}{\numberline {6.1.2}Performance considerations}{33}
+\contentsline {subsubsection}{Implementation size}{33}
+\contentsline {subsubsection}{Locality of Reference}{34}
+\contentsline {paragraph}{This section needs work.}{34}
+\contentsline {section}{\numberline {6.2}Processing multiple regular expressions}{34}
+\contentsline {paragraph}{This section needs work.}{34}
+\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{35}
 \contentsline {paragraph}{This section needs work.}{35}
-\contentsline {section}{\numberline {6.2}Processing multiple regular expressions}{35}
-\contentsline {paragraph}{This section needs work.}{35}
-\contentsline {chapter}{\numberline {7}Automatically Generated Scanners}{36}
-\contentsline {paragraph}{This section needs work.}{36}
-\contentsline {part}{III\hspace {1em}Parsing}{37}
-\contentsline {chapter}{\numberline {8}Context Free Grammars}{39}
-\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{41}
-\contentsline {paragraph}{This section needs work.}{41}
-\contentsline {chapter}{\numberline {10}Bottom-up parsers}{42}
-\contentsline {paragraph}{This section needs work.}{42}
-\contentsline {chapter}{\numberline {11}Automatically generated parsers}{43}
+\contentsline {part}{III\hspace {1em}Parsing}{36}
+\contentsline {chapter}{\numberline {8}Context Free Grammars}{38}
+\contentsline {section}{\numberline {8.1}Derivations}{41}
+\contentsline {chapter}{\numberline {9}Top-down recursive-descent parsers}{43}
 \contentsline {paragraph}{This section needs work.}{43}
-\contentsline {part}{IV\hspace {1em}Semantic Processing}{44}
+\contentsline {chapter}{\numberline {10}Bottom-up parsers}{44}
+\contentsline {paragraph}{This section needs work.}{44}
+\contentsline {chapter}{\numberline {11}Automatically generated parsers}{45}
 \contentsline {paragraph}{This section needs work.}{45}
-\contentsline {chapter}{\numberline {12}Syntax vs. Semantics}{46}
-\contentsline {paragraph}{This section needs work.}{46}
-\contentsline {chapter}{\numberline {13}Type systems}{47}
+\contentsline {part}{IV\hspace {1em}Semantic Processing}{46}
 \contentsline {paragraph}{This section needs work.}{47}
-\contentsline {chapter}{\numberline {14}Implementation details}{48}
+\contentsline {chapter}{\numberline {12}Syntax vs. Semantics}{48}
 \contentsline {paragraph}{This section needs work.}{48}
-\contentsline {part}{V\hspace {1em}The Back-end}{49}
+\contentsline {chapter}{\numberline {13}Type systems}{49}
+\contentsline {paragraph}{This section needs work.}{49}
+\contentsline {chapter}{\numberline {14}Implementation details}{50}
 \contentsline {paragraph}{This section needs work.}{50}
-\contentsline {chapter}{\numberline {15}The Visitor Pattern}{51}
-\contentsline {paragraph}{This section needs work.}{51}
-\contentsline {chapter}{\numberline {16}Code generation}{52}
+\contentsline {part}{V\hspace {1em}The Back-end}{51}
 \contentsline {paragraph}{This section needs work.}{52}
-\contentsline {chapter}{\numberline {17}Optimization}{53}
+\contentsline {chapter}{\numberline {15}The Visitor Pattern}{53}
 \contentsline {paragraph}{This section needs work.}{53}
-\contentsline {part}{VI\hspace {1em}\LaTeX sample code}{54}
-\contentsline {section}{\numberline {17.1}Theorem-Like Environments}{55}
-\contentsline {chapter}{\numberline {A}The First Appendix}{57}
-\contentsline {chapter}{\numberline {B}The Second Appendix}{58}
-\contentsline {chapter}{Afterword}{60}
+\contentsline {chapter}{\numberline {16}Code generation}{54}
+\contentsline {paragraph}{This section needs work.}{54}
+\contentsline {chapter}{\numberline {17}Optimization}{55}
+\contentsline {paragraph}{This section needs work.}{55}
+\contentsline {part}{VI\hspace {1em}\LaTeX sample code}{56}
+\contentsline {section}{\numberline {17.1}Theorem-Like Environments}{57}
+\contentsline {chapter}{\numberline {A}The First Appendix}{59}
+\contentsline {chapter}{\numberline {B}The Second Appendix}{60}
+\contentsline {chapter}{Afterword}{62}

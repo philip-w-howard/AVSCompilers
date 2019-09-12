@@ -68,13 +68,36 @@ frame=single,	                  % adds a frame around the code
 tabsize=2,	                    % sets default tabsize to 2 spaces
 captionpos=b,                   % sets the caption-position to bottom
 breaklines=true,                % sets automatic line breaking
+float=thbp,
 %breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
 %title=\lstname,                 % show the filename of files included with \lstinputlisting; also try caption instead of title
 %escapeinside={\%*}{*)}            % if you want to add a comment within your code
 }
+
+
+\lstnewenvironment{derivation}[2]
+{
+\lstset{float=thbp,caption={#1},label={#2},numbers=none}
+\renewcommand{\lstlistingname}{Derivation}
+}
+{
+\lstset{numbers=left}
+\renewcommand{\lstlistingname}{Listing}
+}
+
+\lstnewenvironment{cfg}[2]
+{
+\lstset{float=thbp,caption={#1},label={#2},stepnumber=1,escapechar=Q}
+\renewcommand{\lstlistingname}{CFG}
+}
+{
+\lstset{numbers=left,stepnumber=5}
+\renewcommand{\lstlistingname}{Listing}
+}
+
 \newcommand{\code}[1] {\lstinline[breaklines=yes,breakatwhitespace=yes]{#1}}
 
-\newcommand{\cfg}[2] {\indent \texttt{#1} $\rightarrow$ \texttt{#2}}
+\newcommand{\cfgprod}[2] {\texttt{#1} $\rightarrow$ \texttt{#2}}
 
 %\usepackage[T1]{fontenc}  % access \textquotedbl
 %\usepackage{textcomp}     % access \textquotesingle
@@ -809,7 +832,7 @@ A & 1, 2 & c &  \\
 \end{tabular}
 \end{center}
 
-Completing the first row, we can follow an $a$ from state 1 to 5, and from state 2 to 3. Add these two states to the resulting states column, and then follow the $\Lambda$s adding state 6. Label the set \texttt{ \{3, 5, 6\}} as meta-state~$B$ and add rows to the table:
+Completing the first row, we can follow an $a$ from state 1 to 5, and from state 2 to 3. Add these two states to the resulting states column, and then follow the $\Lambda$s adding state 6. Label the set \code{ \{3, 5, 6\}} as meta-state~$B$ and add rows to the table:
 
 \begin{center}
 \small
@@ -1091,24 +1114,18 @@ G & C & C & - \\
 \end{center}
 
 This table can be represented as a 2D array. The left-most column does not need to be stored as it simply gives the row index (converting from letters to suitable numbers). The current state is used as the row index and the just-read character is used as the column index. This results in the code in Listing~\ref{L.transitionTable}.
-
-\begin{mylisting}
-\centering
-\begin{verbatim}
-1  state = 0;
-2  while (more_input_available)
-3  {
-4     input = next_character();
-5  	 state = table[state][input];
-6  }
-7  if (state == final_state) 
-8     return found;
-9  else
-10     return not_found;
-\end{verbatim}
-\caption{Pseudo-code for processing a transition table.}
-\label{L.transitionTable}
-\end{mylisting}
+\begin{lstlisting}[caption={Pseudo-code for processing a transition table.},label=L.transitionTable]
+state = 0;
+while (more_input_available)
+{
+   input = next_character();
+	 state = table[state][input];
+}
+if (state == final_state) 
+   return found;
+else
+   return not_found;
+\end{lstlisting}
 
 This code makes some problematic simplifying assumptions. First of all, how should the code deal with non-existent transitions (all the dashes in the table)? A simply solution is to add an error state to the table. All the dashes get changed to that error state, and all the columns for that error state return back to the same state: once you're in the error state, you're stuck there.
 
@@ -1122,33 +1139,28 @@ Since this is A Very Simple compiler book, I will not delve into character conve
 
 There are many space/speed trade-offs in computer algorithms (such as executing code to convert from UTF-16 to UTF-8 to have a narrower transition table). There are also trade-offs between code size and data size. The code presented in Listing~\ref{L.transitionTable} was very compact, but it required a potentially large data table. There is an alternative implementation that requires very little data, but a large amount of code. This is illustrated in Listing~\ref{L.switchStatement}.
 
-\begin{mylisting}
-\centering
-\begin{verbatim}
-1  state_0:
-2  input = next_character();
-3  switch (input)
-4  {
-5  	  case 'a': goto state_1;
-6     case 'b': goto state_2;
-7     case 'c': goto state_done;
-8     default:  goto state_error;
-9  }
-10
-11  state_1:
-12  input = next_character();
-13  switch (input)
-14  {
-15     case 'x': goto state_0;
-16     case 'b': goto state_5;
-17     case EOF: goto state_done;
-18     default:  goto state_error;
-19  }
-    ...
-\end{verbatim}
-\caption{Alternative pseudo-code for processing a transition table. This just a sample to illustrate the form of the code. The actual \code{switch} statements would be determined based on the transition table.}
-\label{L.switchStatement}
-\end{mylisting}
+\begin{lstlisting}[caption={Alternative pseudo-code for processing a transition table. This just a sample to illustrate the form of the code. The actual \code{switch} statements would be determined based on the transition table.},label=L.switchStatement]
+state_0:
+input = next_character();
+switch (input)
+{
+   case 'a': goto state_1;
+   case 'b': goto state_2;
+   case 'c': goto state_done;
+   default:  goto state_error;
+}
+
+state_1:
+input = next_character();
+switch (input)
+{
+   case 'x': goto state_0;
+   case 'b': goto state_5;
+   case EOF: goto state_done;
+   default:  goto state_error;
+}
+...
+\end{lstlisting}
 
 This version of the code uses \code{switch} statements to move from state to state. Essentially, each row of the transition table is encoded into a \code{switch} statement. \code{goto} statements\footnote{Normally, \code{goto} statements are considered an unforgivable evil in code. This is one of the few instances were they are useful, and not evil} are used to jump to the block of code that handles the new state.
 
@@ -1198,24 +1210,93 @@ or sometimes a colon-colon-equals ( ::= ).
 A sample production that indicates that the symbol \code{A} 
 can be replaced by \code{X Y Z} is given below:
 
-\cfg{A}{X Y Z}
+\cfgprod{A}{X Y Z}
 
 Symbols in CFGs are of two flavors: non-terminals are those that appear on the left hand side of a production. They are non-terminals because they can be replaced by other symbols. Terminals are those symbols that never appear on the left hand side. They are ``terminal'' because they can never be replaced. For ease of reading, non-terminals are usually given in UPPERCASE. terminals are given in lowercase. CFGs also need a start symbol - the symbol that is the starting point for derivations. The start symbol is often either \code{S} or \code{START}, but if neither is specified, the left hand side of the first production is considered the start symbol.
 
-Here is a more complete CFG example. The productions have been numbered for easy reference.
+%----------------------------------------------------------
+\begin{cfg}{A CFG that defines the language of any number of \code{a}'s followed by the same number of \code{b}'s.}{F.cfg.1}
+Q\cfgprod{S}{a S b}Q
+Q\cfgprod{S}{$\lambda$}Q
+\end{cfg}
+%----------------------------------------------------------
 
+Figure~\ref{F.cfg.1} shows a complete CFG. The productions have been numbered for easy reference. There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with \code{a S b}. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
+
+What can we do with this CFG? Let's do some derivations. Starting with the start symbol and Production 1, we can get the string \code{aSb}. If we then use Production 2, we are left with the string \code{ab}. Since there are no more non-terminals, we are done.
+
+What if we invoked Production 1 more than once? The first invocation produces \code{aSb}. The next invocation produces \code{aaSbb}. Each invocation adds another \code{a} and \code{b}. When we finally invoke Production 2, we are left with a string of \code{a}'s followed by the same number of \code{b}'s.
+
+While not the most complex illustration, this CFG illustrates that CFGs are more powerful than regular expressions. Regular expressions are not able to generate balanced parenthesis. A regular expression such as \code{(*)*} allows any number of opening parenthesis and any number of closing parenthesis, but there is no way to guarantee that the number of closing parenthesis match the number of opening parenthesis. If we substituted parenthesis for the \code{a} and \code{b} in Figure~\ref{F.cfg.1}, we would have a solution to the balanced parenthesis problem.
+
+Figure~\ref{F.cfg.2} presents a more complete, and more interesting CFG. This language defines a program as zero or more statements. An individual statement can be an assignment statement (in this language, an assignment statement is a terminal, so the assumption is that they are defined elsewhere), an \code{if} statement, or a compound statement (curly braces surrounding any number of statements). 
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
 \begin{enumerate}
-\item \cfg{S}{a S b}
-\item \cfg{S}{$\lambda$}
+\item \cfgprod{PROGRAM}{STMTS}
+\item \cfgprod{STMTS}{STMT STMTS}
+\item \cfgprod{STMTS}{$\lambda$}
+\item \cfgprod{STMT}{IF\_STMT}
+\item \cfgprod{STMT}{COMPOUND\_STMT}
+\item \cfgprod{STMT}{assignment\_stmt}
+\item \cfgprod{IF\_STMT} {if ( expr ) STMT}
+\item \cfgprod{COMPOUND\_STMT} { \{ STMTS \} }
+\item \cfgprod{COMPOUND\_STMT} { STMT }
 \end{enumerate}
+\caption[CFG of a simple programming language]{This CFG defines a program as being zero or more statements, where each statement is either an \code{if} statement, an assignment statement or a compound statement.}
+\label{F.cfg.2}
+\end{figure}
+%----------------------------------------------------------
 
-There are only two productions. The first one says that the start symbol (\code{S}) can be replaced with \code{a S b}. Note that this is a recursive rule because the \code{S} appears on both sides. The second production says that \code{S} can be replaced with nothing.
+\begin{lstlisting}[caption={Sample program in the language defined by the CFG in Figure~\ref{F.cfg.2}},label=L.nested.ifs]
+assignment_statement
+if (expr)
+   assignment_statement
+if (expr)
+    if (expr)
+       assignment_statement
+if (expr)
+{
+   assignment_statement
+   assignment_statement
+   {
+   }
+}
+\end{lstlisting}
 
-What can we do with this CFG? Let's do some derivations. Starting with the start symbol and Production 1, we can get the string \code{a S b}. If we then use Production 2, we are left with the string \code{a b}. Since there are no more non-terminals, we are done.
+The program in Listing~\ref{L.nested.ifs} illustrates the features of the language defined by the CFG in Figure~\ref{F.cfg.2}. Line~1 is a simple assignment statement. The \code{if} statement that begins in Line~2 is a simple \code{if} statement. The \code{if} statement that begins in Line~4 shows a nested \code{if} statement. The compound statement that begins in Line~8 shows that compound statements can be nested and that they can be empty (in Line~11).
 
-What if we invoked Production 1 more than once? The first invocation produces \code{a S b}. The next invocation produces \code{aa S bb}. Each invocation adds another \code{a} and \code{b}. When we finally invoke Production 2, we are left with a string of \code{a}'s followed by the same number of \code{b}'s.
+\section{Derivations}
+
+Listing~\ref{L.nested.ifs} claims to be a program in the language defined in Figure~\ref{F.cfg.2}. How can we substantiate this claim? This is normally done by showing a derivation of the program given the CFG. Each line of a derivation substitutes a single non-terminal for the right-hand-side of a production for that non-terminal. 
+
+Derivations start with the start symbol and continue until there are only non-terminals. Each step other than the first should list the production number that was invoked to make the substitution. Rather than starting with the longer program in Listing~\ref{L.nested.ifs}, let's start with the shorter program in Listing~\ref{L.short.prog}.
+
+\begin{lstlisting}[caption={Short program program in the language defined by the CFG in Figure~\ref{F.cfg.2}. The derivation of this program is given in Derivation~\ref{D.derive.1}},label=L.short.prog]
+if (expr)
+{
+   assignment_statement
+   assignment_statement
+}
+\end{lstlisting}
+
+\begin{derivation}{Derivation of the program in Listing~\ref{L.short.prog}}{D.derive.1}
+    PROGRAM
+1   STMTS
+4   IF_STMT
+7   if ( expr ) STMT
+8   if ( expr ) { STMTS }
+2   if ( expr ) { STMT STMTS }
+6   if ( expr ) { assignment_stmt STMTS }
+2   if ( expr ) { assignment_stmt STMT STMTS }
+6   if ( expr ) { assignment_stmt assignment_stmt STMTS }
+3   if ( expr ) { assignment_stmt assignment_stmt }
+\end{derivation}
 
 zzz
+
 \chapter {Top-down recursive-descent parsers}
 \needswork{}
 
