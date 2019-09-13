@@ -165,20 +165,146 @@ float=thbp,
 \tableofcontents
 \listoffigures
 \chapter{Preface}
+I've been teaching Introduction to Grammars (aka Computer Theory) and Compiler Methods at Oregon Institute of Technology for several years. There is a Computer Theory text that I really like, but it has become criminally expensive (as I'm writing this, Amazon would be glad to sell you a new paperback edition for over \$300). Although there are good compiler books available, none of them seem to approach the subject they way I do. I have no visions of preparing the next generation of compiler masters. There are plenty of reasons to study compilers even if you're never going to write one. My course focuses on those reasons.
 
-Given the existence of other very good books suitable for a course on compilers, why did I choose to write another one? There are several reasons:
-  
-\begin{enumerate}
-\item Most compilers books seem to be written from the perspective that the course is preparing students to actually write a production compiler. That is not the perspective of the compiler courses I've taught. While the students in my course write a complete compiler, I readily acknowledge that very few of my students will work on a compiler as part of their career (although some have). The value of the course has more to do with helping the students to become better developers than in preparing them for a particular field. I have found that this difference in perspective alters what material I find most suitable for the courses I teach. 
-\item I find the price of most text books almost criminal. By writing my own text, I can make electronic copies freely available and make printed copies available for a reasonable price.
-\end{enumerate}
+So, why not write my own? Lot's of reasons that I won't enumerate, but obviously I've attempted to get past those and actually write the book. As I've written this, I've wandered between ``Should it be a grammars book?'' and ``Should it be a compilers book?'' and ``Should it be both?''. 
 
+It is possible to write a good grammars book without dealing with compiler issues. The best books I've seen on this subject do this. But the program at OIT is a very hands-on, so my students always want an answer to ``Why do we study this?''. Compilers is certainly part of the answer (though I do my best to convince my students that there are other reasons as well). So my grammars book should mention some of the compiler issues.
+
+I can't imagine a good compiler book that doesn't touch on some of the concepts normally covered in a grammars book. Where would a modern compiler be without regular expressions and context free grammars?
+
+So I'm attempting to write a book that will be useful in both classes. The first part of the book deals with the theoretic issues: The Theory of Computation (aka Formal Languages). This section is structured in such a way that the parts that are necessary for a compiler course can be easily segmented out. The later parts, the compiler parts, contain references back to the relevant sections of the theory part.
+
+I hope that this book proves useful to my students, and if it is discovered by others, that it is useful to them as well.
+
+Phil Howard
 \mainmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FORMATTING
 \setlength{\parindent}{0cm} % Default is 15pt.
 \setlength{\parskip}{12pt plus 2pt minus 2pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\part{Computer Theory aka Formal Languages}
+My grammars students often wonder why we include a theory course in an otherwise very hands-on program. My answer, ``Because grammars is fun!'' doesn't seem to carry much weight, so I offer the following list of benefits to studying this topic:
+
+\begin{enumerate}
+\item The grammars course lays the theoretical foundation for the compilers course. What does a compiler do? It implements several formal language processors. What is a formal language? That's part of what is learned in the grammars course.
+\item You will be better at what you're being trained to do if you can think abstractly. A theory course helps you do that.
+\item Many programming problems can be made much easier if you can transform the problem to a different domain. The grammars class illustrates ways this is done. If you ``get'' the mechanism, you can apply it elsewhere.
+\item As you are stretched, you grow. By facing difficult challenges in your course work, you are better equipped to face difficult challenges in your professional work.
+\item And besides, grammars is fun!
+\end{enumerate}
+
+\chapter{Introduction}
+\section{Historical Background}
+\section{Formal Languages}
+Computer theory deals with what is known as ``formal languages''. They aren't formal in the sense that you use them when talking to important people (as opposed to the informality that you allow when shooting the breeze with friends). They are formal in the sense that the conform to a specific (usually mathematical) form. In particular, given a statement, it is always possible to answer the question, ``Is that statement a valid statement in this formal language?'' English does not meet this definition. Consider all the red ink used by English teachers while grading freshmen compositions. The writers thought their statements were valid English, the but teachers disagreed.
+
+Figure~\ref{F.formal.language.processor} illustrates what a formal language processor does. Any arbitrary input can be fed into the processor, and it answers the question, ``Is the input a valid statement in the language?''. It always returns ``yes'' or ``no''. If the language is a formal language, there can be no ``maybe''.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+\node (a) at (-5,0) {};
+\node (b) at (0,0) [shape=rectangle, draw] {Language Processor};
+\node (c) at (5,0) {};
+
+\draw [->] (a) -- (b) node [midway, above] {input} ;
+\draw [->] (b) -- (c) node [midway, above] {answer} ;
+%\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
+\end{tikzpicture}
+ \caption[Formal language processor]{A formal language process is fed some input and it returns one of two answers: The input is a valid statement in the language or The input is not a valid statement in the language.}
+  \label{F.formal.language.processor}
+\end{figure}
+%----------------------------------------------------------
+
+If you attempted to create a Language Processor for English, it should probably reject statements like, ``Cup sky red Perl''. But could you create a processor that accepts all valid English (including English poetry), and rejects all non-English. To get a sense of the difficulty of this challenge, I refer you to poetry (considered valid English poetry by those who get to decide such things) by ee cummings (capitalization is correct). 
+
+Those who study formal languages usually restrict themselves to very simple languages. As an example, consider the language of all strings consisting of any combination of the letters ``a'' and ``b''. This language includes strings such as ``aaaa'' and ``abababbbb''. It isn't useful for anything outside the study of formal languages, but it is an example of a formal language.
+
+The study of formal languages is tightly coupled with mathematical sets. In particular, a formal language is a set of strings. Namely, all those strings that meet the definition of the language.  This book assumes you are familiar with mathematical sets including the operations union, intersection, and subtraction. If you aren't familiar with these operations, I'm sure there's a Wikipedia page that can help you out.
+
+Formal languages consist of the following:
+\begin{enumerate}
+\item An alphabet: a set of characters that the strings in the language are composed of. The alphabet for a language is often represented by the symbol $\Sigma$.
+\item A definition of what strings are in the language.
+\end{enumerate}
+
+Let's illustrate with an example. 
+
+\begin{quote}
+$\Sigma = \{ a b \}$
+
+All strings of five letters.
+\end{quote}
+
+Given this definition, the string ``aaxbb'' would be rejected because 'x' is not in the alphabet. The string ``aabb'' would likewise be rejected because it consists of four letters, not five. However, the strings, ``aaaaa'', ``aabbb'', and ``ababa'' would all be included in the language (along with many others).
+
+Formal languages can be broken into categories based on the mechanism used to specify the language. We will initially be interested in three types of definitions, which are discussed in the following chapters.
+\begin{enumerate}
+\item Recursive definitions (not to be confused with Recursive Languages discussed in Chapter~\ref{C.Beyond.Context.Free})
+\item Regular Expressions
+\item Context Free Grammars
+\end{enumerate}
+
+\chapter{Recursive Definitions}
+Recursion is a useful technique in writing some computer programs. It is also a useful technique in specifying formal languages. Consider the following two definitions of the set EVEN:
+\begin{enumerate}
+\item The set of all positive integers divisible by 2
+\item A recursive definition:
+\begin{itemize}
+\item 2 is in EVEN
+\item If $x$ is in EVEN then $x+2$ is in EVEN.
+\end{itemize}
+\end{enumerate}
+
+Which of these two definitions is the most useful? Probably the first one. If you wanted to prove the 96 is in EVEN using the first definition, a simple division by 2 suffices. If you wanted to prove this using the second definition, it would take a bit longer. But there are other instances where a recursive definition is quite elegant.
+
+Consider the following non-recursive definition of POLYNOMIAL:
+\begin{enumerate}
+\item All numbers are in POLYNOMIAL
+\item The variable $x$ is in POLYNOMIAL
+\item The operators $+ - * /$ can be used in POLYNOMIAL
+\item POLYNOMIAL does not allow two numbers in a row
+\item POLYNOMIAL does not allow two operators in a row
+\item POLYNOMIAL does not allow a leading or trailing operator
+\item POLYNOMIAL can use parenthesis to group things
+\end{enumerate}
+
+Is this list of rules sufficient? Does it allow all valid polynomials and does it rule out all invalid polynomials? It turns out, the answer to some of these questions is ``no'' ($-x$ is a valid polynomial but it is disallowed by Rule 6). We could try to extend and modify the list of rules, but this would, at best, be cumbersome. Let's try a recursive definition:
+
+\begin{quote}
+$\Sigma = \{numbers\ x\ +\ -\ (\ ) \}$
+\begin{enumerate}
+\item any number is in POLYNOMIAL
+\item the variable $x$ is in POLYNOMIAL
+\item if $p$ and $q$ are in POLYNOMIAL, then so are:
+\begin{enumerate}
+\item $p+q$
+\item $p-q$
+\item $(p)$
+\item $pq$
+\end{enumerate}
+\end{enumerate}
+\end{quote}
+
+From this definition, could we argue that $5x^3 + 7X^2 + 3x + 7$ is in POLYNOMIAL? Almost. This notation includes a mathematical short-cut that is not included in our definition. It includes a superscripted number (e.g. $x^3$) to mean repeated multiplication. If we allow that short-cut, the proof can follow the following pattern:
+\begin{enumerate}
+\item 5 is in POLYNOMIAL (Rule 1)
+\item $x$ is in POLYNOMIAL (Rule 2)
+\item $5x$ is in POLYNOMIAL (Lines 1 and 2 and Rule~3d)
+\item $5x^2$ is in POLYNOMIAL (Lines 2 and 3 and Rule~3d)
+\item \ldots
+\end{enumerate}
+It should be obvious how to extend this to complete the proof.
+zzz
+\chapter{Regular Expressions}
+\chapter{Context Free Grammars}
+\chapter{Beyond Context Free Languages}
+\label{C.Beyond.Context.Free}
+zzz
 
 \part{Overview}
 \chapter{Introduction}

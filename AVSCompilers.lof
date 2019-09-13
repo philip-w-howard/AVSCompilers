@@ -1,20 +1,26 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces What is a Compiler}}{4}
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Compiler Structure}}{7}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Formal language processor}}{4}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Sample Finite Automaton}}{15}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Sample Non-deterministic Finite Automaton}}{16}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Thompson's Construction}}{18}
-\contentsline {figure}{\numberline {5.4}{\ignorespaces NFA produced by Thompson's}}{21}
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Transition table for DFA}}{28}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces What is a Compiler}}{15}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Compiler Structure}}{18}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {8.1}{\ignorespaces CFG of a simple programming language}}{40}
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Sample Finite Automaton}}{26}
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Sample Non-deterministic Finite Automaton}}{27}
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Thompson's Construction}}{29}
+\contentsline {figure}{\numberline {10.4}{\ignorespaces NFA produced by Thompson's}}{32}
+\contentsline {figure}{\numberline {10.5}{\ignorespaces Transition table for DFA}}{39}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {13.1}{\ignorespaces CFG of a simple programming language}}{51}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
