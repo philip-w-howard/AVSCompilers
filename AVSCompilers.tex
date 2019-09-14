@@ -254,52 +254,105 @@ Recursion is a useful technique in writing some computer programs. It is also a 
 \begin{enumerate}
 \item The set of all positive integers divisible by 2
 \item A recursive definition:
-\begin{itemize}
+\begin{enumerate}
 \item 2 is in EVEN
 \item If $x$ is in EVEN then $x+2$ is in EVEN.
-\end{itemize}
+\end{enumerate}
 \end{enumerate}
 
 Which of these two definitions is the most useful? Probably the first one. If you wanted to prove the 96 is in EVEN using the first definition, a simple division by 2 suffices. If you wanted to prove this using the second definition, it would take a bit longer. But there are other instances where a recursive definition is quite elegant.
 
-Consider the following non-recursive definition of POLYNOMIAL:
+Consider the following non-recursive definition of arithmetic expressions:
 \begin{enumerate}
-\item All numbers are in POLYNOMIAL
-\item The variable $x$ is in POLYNOMIAL
-\item The operators $+ - * /$ can be used in POLYNOMIAL
-\item POLYNOMIAL does not allow two numbers in a row
-\item POLYNOMIAL does not allow two operators in a row
-\item POLYNOMIAL does not allow a leading or trailing operator
-\item POLYNOMIAL can use parenthesis to group things
+\item $\Sigma = \{ number\ +\ -\ *\ /\ (\ ) \}$
+\item Can't have two operators in a row
+\item Must have balanced parenthesis
+\item Can't have two numbers in a row
+\item Can't begin or end with an operator
 \end{enumerate}
 
-Is this list of rules sufficient? Does it allow all valid polynomials and does it rule out all invalid polynomials? It turns out, the answer to some of these questions is ``no'' ($-x$ is a valid polynomial but it is disallowed by Rule 6). We could try to extend and modify the list of rules, but this would, at best, be cumbersome. Let's try a recursive definition:
-
+Is this set of rules sufficient? Do they allow every valid arithmetic expression? Do the preclude every invalid expression? Could you argue from these rules that the following is a valid arithmetic expression?
 \begin{quote}
-$\Sigma = \{numbers\ x\ +\ -\ (\ ) \}$
+$(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
+\end{quote}
+How about:
+\begin{quote}
+$()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
+\end{quote}
+This last expression meets the definition given above, but is not a valid arithmetic expression because of the empty parenthesis. We could attempt to enhance our list of rules, but how could we know that we have a complete set?
+
+Let's instead give a recursive definition:
+
 \begin{enumerate}
-\item any number is in POLYNOMIAL
-\item the variable $x$ is in POLYNOMIAL
-\item if $p$ and $q$ are in POLYNOMIAL, then so are:
+\item Any number is in AE
+\item If $f$ and $g$ are in AE, then so are:
 \begin{enumerate}
-\item $p+q$
-\item $p-q$
-\item $(p)$
-\item $pq$
+\item $f + g$
+\item $f - g$
+\item $f * g$
+\item $f / g$
+\item $(f)$
 \end{enumerate}
 \end{enumerate}
+
+How can we use this definition to prove an expression is a valid arithmetic expression. We do so by construction: invoke the various rules one at a time until the desired expression is constructed. Let's do so with the expression:
+\begin{quote}
+$(2+7)/5$
+\end{quote}
+The construction is as follows:
+\begin{enumerate}
+\item $2$ is in AE (Rule 1)
+\item $7$ is in AE (Rule 1)
+\item $2+7$ is in AE (Points 1 and 2 and Rule 2b)
+\item $(2+7)$ is in AE (Point 3 and Rule 2e)
+\item $5$ is in AE (Rule 1)
+\item $(2+7)/5$ is in AE (Points 4 and 5 and Rule 2d)
+\end{enumerate}
+Having constructed the desired expression using the rules, we have proven that it is a valid arithmetic expression. (More formally, we have proven that it is in the language AE as defined above).
+
+How do we prove that an expression isn't in AE? This is a bit more complicated. Take the expression given above:
+\begin{quote}
+$()()(2+7)/3-(((4+5)*(6)-1)*3 + 4)$
+\end{quote}
+Let's generalize it to the statement:
+\begin{quote}
+Valid statements in AE never have empty parenthesis.
 \end{quote}
 
-From this definition, could we argue that $5x^3 + 7X^2 + 3x + 7$ is in POLYNOMIAL? Almost. This notation includes a mathematical short-cut that is not included in our definition. It includes a superscripted number (e.g. $x^3$) to mean repeated multiplication. If we allow that short-cut, the proof can follow the following pattern:
+Before proving this statement, we will prove a different one:
+\begin{quote}
+Valid statements in AE never start with a close parenthesis and never end with an open parenthesis.
+\end{quote}
+The proof is as follows:
 \begin{enumerate}
-\item 5 is in POLYNOMIAL (Rule 1)
-\item $x$ is in POLYNOMIAL (Rule 2)
-\item $5x$ is in POLYNOMIAL (Lines 1 and 2 and Rule~3d)
-\item $5x^2$ is in POLYNOMIAL (Lines 2 and 3 and Rule~3d)
-\item \ldots
+\item Numbers do not contain parenthesis, so Rule~1 cannot create an AE that starts with a close parenthesis or ends with an open parenthesis.
+\item If $f$ and $g$ do not start with a close parenthesis or end with an open parenthesis, none of the Rule 2's will create a string that starts with a close parenthesis or ends with an open parenthesis.
+\item Since there is no way to construct a string that starts with a close parenthesis or ends with an open parenthesis, such a string does not exist in AE.
 \end{enumerate}
-It should be obvious how to extend this to complete the proof.
-zzz
+
+Back to empty parenthesis: We could prove this using a similar mechanism to what we just used. However, we will use proof by contradiction just to illustrate this mechanism. With this style of proof, you assume the opposite of what you want to prove and then reason until you encounter a contradiction. Since you got to a contradiction, your assumption must have been false. Note: as we will see later, it is important that you only make a single assumption. The contradiction means at least one of your assumptions was false. If you've made multiple assumptions, you don't know which one is false.
+
+Let's assume that a string in AE can contain empty parenthesis. Let's define $s$ as the shortest string that contains empty parenthesis. The string $s$ must be constructed using one of the rules. Which one? Let's consider them one at a time:
+\begin{enumerate}
+\item Numbers do not contain parenthesis, so $s$ cannot be constructed using Rule~1.
+\item The empty string is not a valid number. Rules 2a-2e add characters to the string, and no rules subtract characters from the string. Therefore, it is not possible to have an empty string in AE.
+\item Rules 2a-2d do not add parenthesis to the string so they cannot create $s$.
+\item Rule 2e will create an empty set of parenthesis if either:
+\begin{enumerate}
+\item $f$ is the empty string 
+\item $f$ begins with a close parenthesis or ends with an open parenthesis
+\end{enumerate}
+However, we've already proven that neither of these can happen.
+\item Since there is no way to construct $s$, are assumption must be false: A string in AE cannot contain empty parenthesis.
+\end{enumerate}
+
+\section{Constructing Recursive Definitions}
+We've seen several recursive definitions. What do they have in common? A recursive definition is always composed of two parts:
+\begin{itemize}
+\item Base Cases that identify some set of strings in the language. The base case for AE was ``Any number is in AE''.
+\item Recursive Rules of the form, ``If $x$ is in L, the so is $f(x)$''. Rules 2a-2e for AE are the recursive rules. If the language is a set of strings, then the recursive rules always extend or combine strings. That is, they always make longer strings, they never remove characters from the string. If the language is a set of strings, the recursive rules must specify string operations not numeric operations. The language EVEN was a set of numbers, not strings; as a result, the recursive rule was allowed to perform arithmetic operations.
+\end{itemize}
+
 \chapter{Regular Expressions}
 \chapter{Context Free Grammars}
 \chapter{Beyond Context Free Languages}

@@ -4,60 +4,61 @@
 \contentsline {section}{\numberline {1.1}Historical Background}{3}
 \contentsline {section}{\numberline {1.2}Formal Languages}{3}
 \contentsline {chapter}{\numberline {2}Recursive Definitions}{6}
-\contentsline {chapter}{\numberline {3}Regular Expressions}{9}
-\contentsline {chapter}{\numberline {4}Context Free Grammars}{10}
-\contentsline {chapter}{\numberline {5}Beyond Context Free Languages}{11}
-\contentsline {part}{II\hspace {1em}Overview}{12}
-\contentsline {chapter}{\numberline {6}Introduction}{13}
-\contentsline {section}{\numberline {6.1}Why?}{13}
-\contentsline {section}{\numberline {6.2}What is a compiler?}{15}
-\contentsline {chapter}{\numberline {7}Compiler Structure}{17}
-\contentsline {chapter}{\numberline {8}Intermediate Representations}{20}
-\contentsline {part}{III\hspace {1em}Scanning}{21}
-\contentsline {chapter}{\numberline {9}Regular Expressions}{22}
-\contentsline {chapter}{\numberline {10}Creating a Scanner}{25}
-\contentsline {section}{\numberline {10.1}Finite Automata}{25}
-\contentsline {subsection}{\numberline {10.1.1}Non-deterministic Finite Automata}{26}
-\contentsline {section}{\numberline {10.2}Thompson's}{28}
-\contentsline {section}{\numberline {10.3}Subset Construction}{31}
-\contentsline {chapter}{\numberline {11}Scanner Code}{41}
-\contentsline {section}{\numberline {11.1}Processing Transition Tables}{41}
-\contentsline {subsection}{\numberline {11.1.1}Replacing the table with code}{43}
-\contentsline {subsection}{\numberline {11.1.2}Performance considerations}{44}
-\contentsline {subsubsection}{Implementation size}{44}
-\contentsline {subsubsection}{Locality of Reference}{45}
-\contentsline {paragraph}{This section needs work.}{45}
-\contentsline {section}{\numberline {11.2}Processing multiple regular expressions}{45}
-\contentsline {paragraph}{This section needs work.}{45}
-\contentsline {chapter}{\numberline {12}Automatically Generated Scanners}{46}
-\contentsline {paragraph}{This section needs work.}{46}
-\contentsline {part}{IV\hspace {1em}Parsing}{47}
-\contentsline {chapter}{\numberline {13}Context Free Grammars}{49}
-\contentsline {section}{\numberline {13.1}Derivations}{52}
-\contentsline {chapter}{\numberline {14}Top-down recursive-descent parsers}{54}
-\contentsline {paragraph}{This section needs work.}{54}
-\contentsline {chapter}{\numberline {15}Bottom-up parsers}{55}
-\contentsline {paragraph}{This section needs work.}{55}
-\contentsline {chapter}{\numberline {16}Automatically generated parsers}{56}
+\contentsline {section}{\numberline {2.1}Constructing Recursive Definitions}{10}
+\contentsline {chapter}{\numberline {3}Regular Expressions}{11}
+\contentsline {chapter}{\numberline {4}Context Free Grammars}{12}
+\contentsline {chapter}{\numberline {5}Beyond Context Free Languages}{13}
+\contentsline {part}{II\hspace {1em}Overview}{14}
+\contentsline {chapter}{\numberline {6}Introduction}{15}
+\contentsline {section}{\numberline {6.1}Why?}{15}
+\contentsline {section}{\numberline {6.2}What is a compiler?}{17}
+\contentsline {chapter}{\numberline {7}Compiler Structure}{19}
+\contentsline {chapter}{\numberline {8}Intermediate Representations}{22}
+\contentsline {part}{III\hspace {1em}Scanning}{23}
+\contentsline {chapter}{\numberline {9}Regular Expressions}{24}
+\contentsline {chapter}{\numberline {10}Creating a Scanner}{27}
+\contentsline {section}{\numberline {10.1}Finite Automata}{27}
+\contentsline {subsection}{\numberline {10.1.1}Non-deterministic Finite Automata}{28}
+\contentsline {section}{\numberline {10.2}Thompson's}{30}
+\contentsline {section}{\numberline {10.3}Subset Construction}{33}
+\contentsline {chapter}{\numberline {11}Scanner Code}{43}
+\contentsline {section}{\numberline {11.1}Processing Transition Tables}{43}
+\contentsline {subsection}{\numberline {11.1.1}Replacing the table with code}{45}
+\contentsline {subsection}{\numberline {11.1.2}Performance considerations}{46}
+\contentsline {subsubsection}{Implementation size}{46}
+\contentsline {subsubsection}{Locality of Reference}{47}
+\contentsline {paragraph}{This section needs work.}{47}
+\contentsline {section}{\numberline {11.2}Processing multiple regular expressions}{47}
+\contentsline {paragraph}{This section needs work.}{47}
+\contentsline {chapter}{\numberline {12}Automatically Generated Scanners}{48}
+\contentsline {paragraph}{This section needs work.}{48}
+\contentsline {part}{IV\hspace {1em}Parsing}{49}
+\contentsline {chapter}{\numberline {13}Context Free Grammars}{51}
+\contentsline {section}{\numberline {13.1}Derivations}{54}
+\contentsline {chapter}{\numberline {14}Top-down recursive-descent parsers}{56}
 \contentsline {paragraph}{This section needs work.}{56}
-\contentsline {part}{V\hspace {1em}Semantic Processing}{57}
+\contentsline {chapter}{\numberline {15}Bottom-up parsers}{57}
+\contentsline {paragraph}{This section needs work.}{57}
+\contentsline {chapter}{\numberline {16}Automatically generated parsers}{58}
 \contentsline {paragraph}{This section needs work.}{58}
-\contentsline {chapter}{\numberline {17}Syntax vs. Semantics}{59}
-\contentsline {paragraph}{This section needs work.}{59}
-\contentsline {chapter}{\numberline {18}Type systems}{60}
+\contentsline {part}{V\hspace {1em}Semantic Processing}{59}
 \contentsline {paragraph}{This section needs work.}{60}
-\contentsline {chapter}{\numberline {19}Implementation details}{61}
+\contentsline {chapter}{\numberline {17}Syntax vs. Semantics}{61}
 \contentsline {paragraph}{This section needs work.}{61}
-\contentsline {part}{VI\hspace {1em}The Back-end}{62}
+\contentsline {chapter}{\numberline {18}Type systems}{62}
+\contentsline {paragraph}{This section needs work.}{62}
+\contentsline {chapter}{\numberline {19}Implementation details}{63}
 \contentsline {paragraph}{This section needs work.}{63}
-\contentsline {chapter}{\numberline {20}The Visitor Pattern}{64}
-\contentsline {paragraph}{This section needs work.}{64}
-\contentsline {chapter}{\numberline {21}Code generation}{65}
+\contentsline {part}{VI\hspace {1em}The Back-end}{64}
 \contentsline {paragraph}{This section needs work.}{65}
-\contentsline {chapter}{\numberline {22}Optimization}{66}
+\contentsline {chapter}{\numberline {20}The Visitor Pattern}{66}
 \contentsline {paragraph}{This section needs work.}{66}
-\contentsline {part}{VII\hspace {1em}\LaTeX sample code}{67}
-\contentsline {section}{\numberline {22.1}Theorem-Like Environments}{68}
-\contentsline {chapter}{\numberline {A}The First Appendix}{70}
-\contentsline {chapter}{\numberline {B}The Second Appendix}{71}
-\contentsline {chapter}{Afterword}{73}
+\contentsline {chapter}{\numberline {21}Code generation}{67}
+\contentsline {paragraph}{This section needs work.}{67}
+\contentsline {chapter}{\numberline {22}Optimization}{68}
+\contentsline {paragraph}{This section needs work.}{68}
+\contentsline {part}{VII\hspace {1em}\LaTeX sample code}{69}
+\contentsline {section}{\numberline {22.1}Theorem-Like Environments}{70}
+\contentsline {chapter}{\numberline {A}The First Appendix}{72}
+\contentsline {chapter}{\numberline {B}The Second Appendix}{73}
+\contentsline {chapter}{Afterword}{75}
