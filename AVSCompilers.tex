@@ -466,9 +466,26 @@ The proof is quite simple. If a language is finite, every word in the language c
 (word\_1) + (word\_2) + \dots + (word\_n)
 \end{quote}
 
+\section{Why Regular Languages?}
+We've identified a class of languages known as ``Regular Languages'' --- namely, those languages that can be defined by regular expressions. Why is this class of languages interesting? From a theory point of view, they are interesting because they form what is considered the smallest class of mathematically defined formal languages. Later chapters will deal with larger classes of languages which are supersets of regular languages. 
+
+From a practical point of view, regular languages are useful because fast an efficient to process. By ``process'', what is meant is answering the question, ``Is this input a member of a particular regular language?'' A common application of this is the \code{grep} utility included with most Linux distributions. With \code{grep}, you specify a regular expression and an input file, and \code{grep} identifies all lines of the file that include a match for the regular expression\footnote{This is a simplification of what \code{grep} does, but it is accurate for the purposes of this illustration}. Most uses of regular expressions include ``scanning'' for a match. A text string (often the contents of a text file) is read looking for a match to the regular expression. How efficient are regular expressions scanners? Theorem~\ref{TH.O.N.for.res}, which won't be proven until later, gives a bound on their efficiency.
+\begin{theorem}
+\label{TH.O.N.for.res}
+Any regular expression can be scanned for in $O(N)$ with small time constant where $N$ is the length of the input string.
+\end{theorem}
+
+The next chapter discusses a ``machine'' that can perform this processing.
+
 \chapter{Finite Automata}
+There is a well-known children's game called Chutes and Ladders. The goal is to be the first player to move their piece from the beginning (bottom) to the ending (top) of the board. On a player's turn, they spin a spinner which lands on a number. The player advances their piece the specified number of squares on the board. If their piece lands on the bottom of a ladder, they climb the ladder thus making extra progress towards their goal. If their piece lands on the top of a chute, they slide down the chute winding up closer to the beginning. This game is considered a ``children's'' game because it involves no strategy. The outcome of the game is completely determined by the sequence of numbers generate by the spinner (assuming the players don't cheat).
+
+What does this game have to do with regular expressions of finite automata? If we assume that the spinner only generates numbers less than ten (single digit numbers), then we could spin the spinner a bunch of times and write down each result. The result would be a string of digits. We could then ask the question, ``Does this sequence of moves result in someone winning the game?'' That still doesn't sound like a regular expression question (although scanning a string sounds familiar), so let's think of a state machine.
+
+A state machine consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves: for example, Player~2 moves forward three spaces. Each state would have an outbound transition for each possible spinner result for each player. We now have a state machine representation of the game, but the question still remains, ``What does this have to do with regular expressions?''
 
 
+zzz
 \chapter{Context Free Grammars}
 \needswork{}
 \chapter{Beyond Context Free Languages}
