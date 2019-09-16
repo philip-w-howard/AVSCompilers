@@ -1,25 +1,26 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Formal language processor}}{4}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Formal language processor}}{4}{figure.1.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces What is a Compiler}}{22}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Compiler Structure}}{25}
+\contentsline {figure}{\numberline {7.1}{\ignorespaces What is a Compiler}}{24}{figure.7.1}
 \addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {9.1}{\ignorespaces Sample Finite Automaton}}{30}
-\contentsline {figure}{\numberline {9.2}{\ignorespaces Sample Non-deterministic Finite Automaton}}{31}
-\contentsline {figure}{\numberline {9.3}{\ignorespaces Thompson's Construction}}{33}
-\contentsline {figure}{\numberline {9.4}{\ignorespaces NFA produced by Thompson's}}{36}
-\contentsline {figure}{\numberline {9.5}{\ignorespaces Transition table for DFA}}{43}
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Compiler Structure}}{27}{figure.8.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Sample Finite Automaton}}{32}{figure.10.1}
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Sample Non-deterministic Finite Automaton}}{33}{figure.10.2}
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Thompson's Construction}}{35}{figure.10.3}
+\contentsline {figure}{\numberline {10.4}{\ignorespaces NFA produced by Thompson's}}{38}{figure.10.4}
+\contentsline {figure}{\numberline {10.5}{\ignorespaces Transition table for DFA}}{45}{figure.10.5}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {12.1}{\ignorespaces CFG of a simple programming language}}{55}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {13.1}{\ignorespaces CFG of a simple programming language}}{57}{figure.13.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

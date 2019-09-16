@@ -1,0 +1,50 @@
+\BOOKMARK [0][-]{chapter*.3}{Preface}{}% 1
+\BOOKMARK [-1][-]{part.1}{I Computer Theory aka Formal Languages}{}% 2
+\BOOKMARK [0][-]{chapter.1}{Introduction}{part.1}% 3
+\BOOKMARK [1][-]{section.1.1}{Historical Background}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.2}{Formal Languages}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Recursive Definitions}{part.1}% 6
+\BOOKMARK [1][-]{section.2.1}{Constructing Recursive Definitions}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Summary}{chapter.2}% 8
+\BOOKMARK [0][-]{chapter.3}{Regular Expressions}{part.1}% 9
+\BOOKMARK [1][-]{section.3.1}{Language Families}{chapter.3}% 10
+\BOOKMARK [0][-]{chapter.4}{Finite Automata}{part.1}% 11
+\BOOKMARK [0][-]{chapter.5}{Context Free Grammars}{part.1}% 12
+\BOOKMARK [0][-]{chapter.6}{Beyond Context Free Languages}{part.1}% 13
+\BOOKMARK [-1][-]{part.2}{II Overview}{}% 14
+\BOOKMARK [0][-]{chapter.7}{Introduction}{part.2}% 15
+\BOOKMARK [1][-]{section.7.1}{Why?}{chapter.7}% 16
+\BOOKMARK [1][-]{section.7.2}{What is a compiler?}{chapter.7}% 17
+\BOOKMARK [0][-]{chapter.8}{Compiler Structure}{part.2}% 18
+\BOOKMARK [0][-]{chapter.9}{Intermediate Representations}{part.2}% 19
+\BOOKMARK [-1][-]{part.3}{III Scanning}{}% 20
+\BOOKMARK [0][-]{chapter.10}{Creating a Scanner}{part.3}% 21
+\BOOKMARK [1][-]{section.10.1}{Finite Automata}{chapter.10}% 22
+\BOOKMARK [2][-]{subsection.10.1.1}{Non-deterministic Finite Automata}{section.10.1}% 23
+\BOOKMARK [1][-]{section.10.2}{Thompson's}{chapter.10}% 24
+\BOOKMARK [1][-]{section.10.3}{Subset Construction}{chapter.10}% 25
+\BOOKMARK [0][-]{chapter.11}{Scanner Code}{part.3}% 26
+\BOOKMARK [1][-]{section.11.1}{Processing Transition Tables}{chapter.11}% 27
+\BOOKMARK [2][-]{subsection.11.1.1}{Replacing the table with code}{section.11.1}% 28
+\BOOKMARK [2][-]{subsection.11.1.2}{Performance considerations}{section.11.1}% 29
+\BOOKMARK [1][-]{section.11.2}{Processing multiple regular expressions}{chapter.11}% 30
+\BOOKMARK [0][-]{chapter.12}{Automatically Generated Scanners}{part.3}% 31
+\BOOKMARK [-1][-]{part.4}{IV Parsing}{}% 32
+\BOOKMARK [0][-]{chapter.13}{Context Free Grammars}{part.4}% 33
+\BOOKMARK [1][-]{section.13.1}{Derivations}{chapter.13}% 34
+\BOOKMARK [0][-]{chapter.14}{Top-down recursive-descent parsers}{part.4}% 35
+\BOOKMARK [0][-]{chapter.15}{Bottom-up parsers}{part.4}% 36
+\BOOKMARK [0][-]{chapter.16}{Automatically generated parsers}{part.4}% 37
+\BOOKMARK [-1][-]{part.5}{V Semantic Processing}{}% 38
+\BOOKMARK [0][-]{chapter.17}{Syntax vs. Semantics}{part.5}% 39
+\BOOKMARK [0][-]{chapter.18}{Type systems}{part.5}% 40
+\BOOKMARK [0][-]{chapter.19}{Implementation details}{part.5}% 41
+\BOOKMARK [-1][-]{part.6}{VI The Back-end}{}% 42
+\BOOKMARK [0][-]{chapter.20}{The Visitor Pattern}{part.6}% 43
+\BOOKMARK [0][-]{chapter.21}{Code generation}{part.6}% 44
+\BOOKMARK [0][-]{chapter.22}{Optimization}{part.6}% 45
+\BOOKMARK [-1][-]{part.7}{VII LaTeXsample code}{}% 46
+\BOOKMARK [0][-]{section.22.1}{Theorem-Like Environments}{part.7}% 47
+\BOOKMARK [0][-]{appendix.A}{The First Appendix}{part.7}% 48
+\BOOKMARK [0][-]{appendix.B}{The Second Appendix}{part.7}% 49
+\BOOKMARK [0][-]{appendix*.27}{Afterword}{part.7}% 50
