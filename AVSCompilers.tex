@@ -484,124 +484,7 @@ What does this game have to do with regular expressions of finite automata? If w
 
 A state machine consists of a finite number of states (or configurations) and transitions from state to state. How could we turn Chutes and Ladders into a state machine? Suppose there were three players. Each player's marker could be on any of the squares on the board. Each configuration of markers (each player on each valid square in every combination) could be considered a state. There would be a large number of states, but the number would be finite. Transitions consist of moves: for example, Player~2 moves forward three spaces. Each state would have an outbound transition for each possible spinner result for each player. We now have a state machine representation of the game, but the question still remains, ``What does this have to do with regular expressions?''
 
-
-zzz
-\chapter{Context Free Grammars}
-\needswork{}
-\chapter{Beyond Context Free Languages}
-\label{C.Beyond.Context.Free}
-\needswork{}
-
-\part{Overview}
-\chapter{Introduction}
-\section{Why?}
-The first question that many prospective compiler students have is, ``Why should I study compilers?'' The following answers come to mind:
-
-\begin{enumerate}
-\item They're cool. Why wouldn't you want to study compilers?
-\item It gives you a chance to understand what your primary tool does. It would seem strange for a carpenter to not know what a hammer does, or to not know the trade-offs between a hammer and a nail gun. Granted, a carpenter doesn't need to know the physics of how these tools work, but they should have a general idea. 
-
-Many software developers never consider their compilers. They have this large blob of software known as an ``IDE''. They type specialized text into their IDE and click various buttons, and if they are luck, they get a working program. My claim is that better programmers have a better understanding of their tools. This allows them to make better use of these tools, and thus better use of their time, and thus (sometimes) more of their employer's money.
-
-\item It gives you a chance to manage a large code base. I've heard of undergraduate computer science students who graduate having never managed anything bigger than a two week lab. In my ten week compiler course, students write an entire compiler composed of tens of source files and thousands of lines of code. Design and implementation decisions made early have strong consequences later in the term. This is a valuable experience that every developer should have before they step into a job claiming they know what they're doing.
-
-Another advantage of the large project is that it allows the introduction of testing techniques that are harder to make ``real'' in smaller environments.
-
-\item Applied data structures. A compiler has a lot of data that needs to be managed. Many data structures present ``clean'' data structures, but real-life data-problems often aren't so clean. How about a cyclic tree that contains links to a stack of hash tables that in turn has links back to nodes of the tree? OK, if your tree is cyclic, you probably have a bug, but most data structures classes don't give you the opportunity to make (and then fix) such bugs. Having the opportunity to get buried in data is good for you.
-
-\item Applied algorithms. I started to learn calculus in high school. I continued my learning of calculus in college. But I didn't really understand what a $dx$ was until I encountered them in my calculus based physics class. They were no longer merely symbols on a paper, they were now applied, and that's how I finally grasped what they really were. In the same sense, a compiler allows you to apply quite a number of algorithms (and data structures). In doing so, they should be more ``real''.
-
-\item Performance considerations. Computers have gotten so fast, we rarely have to worry about performance (time or memory) considerations. Most compiler runs are also fast enough that the compiler's performance doesn't much matter. But given a compiler, you can compile something very big like the Linux Kernel. Performance now matters. Because of this, a compiler class gives the right to talk about performance considerations in a practical sense.
-
-\end{enumerate}
-
-\section{What is a compiler?}
-Perhaps before asking, ``Why study compilers?'' it would have been best to establish what a compiler is. But most students, by the time they get to a compiler course, have already used compilers so they have some sense of what they are: The software that translates my source code into executable code. We need to be a bit more formal as well as a bit broader in our definition.
-
-In the broadest sense, a compiler takes code as input and outputs an improved version of that code. For the compiler to be valid, it must follow two guiding principles:
-\begin{enumerate}
-\item The compiler must preserve the meaning of the original program.
-\item The compiler must improve the code in some discernible way.
-\end{enumerate}
-
-%----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-\begin{tikzpicture}
-\node (a) at (-5,0) {};
-\node (b) at (0,0) [shape=rectangle, draw] {Compiler};
-\node (c) at (5,0) {};
-
-\draw [->] (a) -- (b) node [midway, above] {code} ;
-\draw [->] (b) -- (c) node [midway, above] {improved code} ;
-%\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
-\end{tikzpicture}
- \caption[What is a Compiler]{A compiler is a program that takes code as input and outputs an improved version of that code.}
-  \label{F.whatiscompiler}
-\end{figure}
-%----------------------------------------------------------
-
-To illustrate the first principle, if you had a program that output the numbers from $1..10$ and the compiler transformed it so that it output one of e.e. cummings's poems, then clearly the compiler did not preserve the meaning of the original program.
-
-The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
-
-This definition of a compiler is deliberately broad. The preprocessor for a C compiler (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' code.
-
-\chapter{Compiler Structure}
-Compilers are typically broken into two broad pieces: the front-end and the back-end. The frond-end deals with language specific issues. The back-end deals with target machine specifics.
-
-A C compiler would need a very different front-end compared with a Haskell compiler because the syntax of the languages is very different. One way to view the front-end of the compiler is that it answers the question, ``Is this a valid program?'' If you feed a Scheme program into an R compiler, the answer would certainly by ``No''. If a Java program that was missing a semicolon was fed into a Java compiler, the answer would also be, ``No'', but for very different reasons.
-
-The back-end of a compiler deals with target specific issues. The back-end for a compiler that targets the Java Virtual Machine (JVM) would be different than the back-end for a compiler that targets and ARM processor. Both of those would be different from a C preprocessor that simply outputs text.
-
-Separating the front-end from the back-end makes sense because they are logically quite different, but it also makes sense because if they are properly designed, you can mix and match different front-ends and back-ends. Suppose you had a really good C compiler, but you wanted to port it to target a different machine. There would be no reason to rewrite the front-end. The C language is the same no matter what machine you are targeting. So if you wrote a new back-end and attached it to your existing front-end, you would now have a new compiler. Mixing can go the other way as well. Starting with the same really good C compiler, suppose you wanted a compiler for a different language (such as Go). There is no reason to rewrite the back-end, simply create a front-end for the new language and attach it to your existing back-end, and you have a new compiler.
-
-For this mixing and matching to work seamlessly, there needs to be a common interface between the front-ends and the back-ends. This interface is typically called an Intermediate Representation (IR) --- see Chapter~\ref{chapter.IR}. The front-end translates the language into the IR, and the back-end translates the IR to the target representation. This is illustrated in Figure~\ref{figure.compiler_structure}
-
-%----------------------------------------------------------
-\begin{figure}[hbt]
-\centering
-\begin{tikzpicture}
-\node (a) at (-5,1.5) [shape=rectangle, draw]{C front-end};
-\node (b) at (-5,0) [shape=rectangle, draw] {Go front-end};
-\node (c) at (-5,-1.5) [shape=rectangle, draw]{FORTRAN fron-end};
-\node (d) at (0,0)  [shape=circle, draw]{IR};
-\node (e) at (5,1.5) [shape=rectangle, draw]{x86 back-end};
-\node (f) at (5,0) [shape=rectangle, draw] {ARM back-end};
-\node (g) at (5,-1.5) [shape=rectangle, draw]{JVM back-end};
-
-\draw [->] (a) -- (d)  ;
-\draw [->] (b) -- (d)  ;
-\draw [->] (c) -- (d)  ;
-\draw [->] (d) -- (e)  ;
-\draw [->] (d) -- (f)  ;
-\draw [->] (d) -- (g)  ;
-\end{tikzpicture}
- \caption[Compiler Structure]{A properly structured compiler allows you to have multiple language-specific front-ends joined to multiple target-specific back-ends. The two a joined using an intermediate representation.}
-  \label{figure.compiler_structure}
-\end{figure}
-%----------------------------------------------------------
-
-Compiler front-ends typically contain two components: A scanner (aka tokenizer or lexer), and a parser. Scanners are discussed in detail in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
-
-Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf("hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
-
-Note: Programmers normally format their code to make it ``pretty''. The code in the above examples was not formatted to emphasize that to a compiler, code is just a stream of characters.
-
-The parser takes a stream of tokens and decides whether that stream of tokens makes up a valid program (more specifically a ``compilation unit'') in the language. The parser only looks at the syntax of the language. As a result, ``valid program'' only means ``a program that is syntactically correct''. It does not mean ``a bug free program''.
-
-\chapter{Intermediate Representations} \label{chapter.IR}
-
-\part{Scanning} \label{part.scanner}
-
-\chapter[Creating a Scanner]{Creating a Scanner from Regular Expressions}
-
-To specify a scanner for a compiler, a developer could specify a regular expression for each token type. But how do you go from that specification to code that can actually process the input? This chapter discusses the algorithms used to convert regular expressions into a scanner. The general process is to convert the regular expression into a finite automaton. The finite automaton can then be evaluated using a simple table look-up on each character.
-
-\section{Finite Automata}
-Finite Automata (aka State Machines) consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. They are often drawn as diagrams as illustrated in Figure~\ref{F.FA_1}.
-
-The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. 
+Before we answer that question (through some other examples), lets define a standardized way of graphically representing state machines (or more formally, finite automata). Finite Automata (aka State Machines) consist of a finite number of states and transitions between states. One state is defined as the start state, and any number of states can be defined as final states. The start state in an FA is signified by an inbound arrow that doesn't originate from another state. Processing always starts in the start state. Final states are signified by a double circle. Transitions are labeled by the letter that is used to move from one state to another. This format is illustrated in Figure~\ref{F.FA_1}.
 
 %----------------------------------------------------------
 \begin{figure}[hbt]
@@ -609,23 +492,23 @@ The start state in an FA is signified by an inbound arrow that doesn't originate
 \begin{tikzpicture}
 
 \fastart {-4, -2};
-\fanonterminalnode {-2,-2}{a};
-\faterminalnode {0,0}{b};
-\fanonterminalnode {2,-2}{c};
+\fanonterminalnode {-2,-2}{1};
+\faterminalnode {0,0}{2};
+\fanonterminalnode {2,-2}{3};
 
-\fatransition{start}{a}{};
-\fatransition{a}{b}{x};
-\fatransition{a}{c}{y};
-\fatransition{c}{b}{z};
-\faarctransition {c}{a}{t}{215}{315};
+\fatransition{start}{1}{};
+\fatransition{1}{2}{x};
+\fatransition{1}{3}{y};
+\fatransition{3}{2}{z};
+\faarctransition {3}{1}{t}{215}{315};
 
 \end{tikzpicture}
- \caption[Sample Finite Automaton]{This is a sample FA. Node $a$ is the start state (it has an incoming arrow from nowhere). State $b$ is a final state (signified by the double-circle). The transitions are labeled by what letter is used to move from one state to another.}
+ \caption[Sample Finite Automaton]{This is a sample FA. State~1 is the start state (it has an incoming arrow from nowhere). State~2 is a final state (signified by the double-circle). The transitions are labeled by what letter is used to move from one state to another.}
   \label{F.FA_1}
 \end{figure}
 %----------------------------------------------------------
 
-Using the FA in Figure~\ref{F.FA_1}, and the input $ytx$, the processing starts in State~$a$ (the start state). The $y$ is used to transition to State~$c$. The $t$ is used to transition back to State~$a$. The $x$ is used to transition to State~$b$. Since the input is exhausted while in a final state, the string is accepted by the FA.
+Using the FA in Figure~\ref{F.FA_1}, and the input $ytx$, the processing starts in State~1 (the start state). The $y$ is used to transition to State~3. The $t$ is used to transition back to State~1. The $x$ is used to transition to State~2. Since the input is exhausted while in a final state, the string is accepted by the FA.
 
 Two conditions can cause a string to be rejected: 
 \begin{enumerate}
@@ -633,13 +516,68 @@ Two conditions can cause a string to be rejected:
 \item If there is no outbound transition on the current letter. The input $yx$ illustrates this case.
 \end{enumerate}
 
-Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \texttt{(yt)* (x | yz)}
+Given these rules for processing FA's, it should be clear that the FA in Figure~\ref{F.FA_1} is equivalent to the regular expression \code{(yt)* (x | yz)}. It is no coincidence that there is a regular expression that corresponds to the FA. It turns out that every FA is equivalent to some regular expression, and that each regular expression has an FA that is equivalent to it. We will prove this in a later section.
+
+Figure~\ref{F.FA_2} gives another FA. This FA shows a slightly different format. The start state has a '-' in the label. Final states have a '$+$' in them. The states can be though of as follows:
+\begin{enumerate}
+\item State 1: the start state.
+\item State 2: An $a$ not preceded by an $a$.
+\item State 3: A $b$ not preceded by a $b$.
+\item State 4: Have read a double letter.
+\end{enumerate}
+Note that once a double letter has been found, the FA remains in the final state no matter what other letters are read.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+
+\fanonterminalnode {-2,0}{1-};
+\fanonterminalnode {2,0}{4+};
+\fanonterminalnode {0,2}{2};
+\fanonterminalnode {0,-2}{3};
+
+\fatransition{1-}{2}{a};
+\fatransition{1-}{3}{b};
+\fatransition{2}{4+}{a};
+\fatransition{3}{4+}{b};
+\faarctransition{3}{2}{a}{120}{240};
+\faarctransition {2}{3}{b}{300}{60};
+\faarctransition {4+}{4+}{a,b}{30}{330};
+
+\end{tikzpicture}
+ \caption[FA for double letters]{This FA accepts all strings that contain a double letter.}
+  \label{F.FA_2}
+\end{figure}
+%----------------------------------------------------------
+
+FA's can also be represented in table form. These tables are called transition tables. The transition table for the FA in Figure~\ref{F.FA_2} is given in Figure~\ref{T.FA.2}. There is one row for each state. The state name is given in the first column. The remaining columns indicate the new state based on the transition letter at the top of the column.
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Current State & a & b \\
+\hline
+1- & 2 & 3 \\
+\hline
+2 & 4 & 3 \\
+\hline
+3 & 2 & 4 \\
+\hline
+4+ & 4 & 4 \\
+\hline
+\end{tabular}
+\caption[Transition Table]{This transition table represents the same FA as Figure~\ref{F.FA_2}}
+\label{T.FA.2}
+\end{figure}
 
 \subsection{Non-deterministic Finite Automata}
 
 The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (DFA). It is deterministic in the sense that for each character that is processed, the FA has exactly one choice on what to do. There is another class of FA's known as Non-deterministic Finite Automata (NFA's). With NFA's, for a given input, there is the potential for multiple choices on what to do. The choices can take two forms:
 \begin{enumerate}
-\item Multiple outbound edges labeled with the same letter. If that letter is read, any of the outbound edges labeled with that letter can be taken. This is illustrated by the edges from Node~$a$ labeled $z$ in Figure~\ref{F.FA_2}.
+\item Multiple outbound edges labeled with the same letter. If that letter is read, any of the outbound edges labeled with that letter can be taken. This is illustrated by the edges from Node~$a$ labeled $z$ in Figure~\ref{F.NFA_1}.
 \item Edges labeled $\Lambda$. These edges can be taken without consuming an input character. Node~$a$ has a $\Lambda$ transition meaning you can leave Node~$a$ without consuming any characters.
 \end{enumerate}
 
@@ -666,11 +604,11 @@ The FA illustrated in Figure~\ref{F.FA_1} is a Deterministic Finite Automaton (D
 
 \end{tikzpicture}
  \caption[Sample Non-deterministic Finite Automaton]{This is a sample NFA. Node $a$ has multiple outbound transitions on $z$. It also has an outbound transition on $\Lambda$ meaning you could leave Node~$a$ without consuming any characters.}
-  \label{F.FA_2}
+  \label{F.NFA_1}
 \end{figure}
 %----------------------------------------------------------
 
-The NFA in Figure~\ref{F.FA_2} accepts the following stings:
+The NFA in Figure~\ref{F.NFA_1} accepts the following stings:
 \begin{mydesc}[2em]
 	\item[$z$] This string is accepted by following the $\Lambda$ transition to Node~$b$ and then using the $z$ to transition to Node~$e$.
 	\item[$tx$] This string is accepted by following the $\Lambda$ transition to Node~$b$ and then using the $t$ to transition to Node~$c$ and the $x$ to transition to Node~$e$.
@@ -1356,6 +1294,122 @@ Does the subset construction always result in a DFA, or might it result in anoth
 \item When generating rows, each meta-state has exactly one row for each input character. As a result, there will never be multiple outbound transitions for the same character.
 \end{enumerate}
 The consequence is that the resulting FA has no non-determinism and is therefore a DFA.
+
+zzz
+\chapter{Context Free Grammars}
+\needswork{}
+\chapter{Beyond Context Free Languages}
+\label{C.Beyond.Context.Free}
+\needswork{}
+
+\part{Overview}
+\chapter{Introduction}
+\section{Why?}
+The first question that many prospective compiler students have is, ``Why should I study compilers?'' The following answers come to mind:
+
+\begin{enumerate}
+\item They're cool. Why wouldn't you want to study compilers?
+\item It gives you a chance to understand what your primary tool does. It would seem strange for a carpenter to not know what a hammer does, or to not know the trade-offs between a hammer and a nail gun. Granted, a carpenter doesn't need to know the physics of how these tools work, but they should have a general idea. 
+
+Many software developers never consider their compilers. They have this large blob of software known as an ``IDE''. They type specialized text into their IDE and click various buttons, and if they are luck, they get a working program. My claim is that better programmers have a better understanding of their tools. This allows them to make better use of these tools, and thus better use of their time, and thus (sometimes) more of their employer's money.
+
+\item It gives you a chance to manage a large code base. I've heard of undergraduate computer science students who graduate having never managed anything bigger than a two week lab. In my ten week compiler course, students write an entire compiler composed of tens of source files and thousands of lines of code. Design and implementation decisions made early have strong consequences later in the term. This is a valuable experience that every developer should have before they step into a job claiming they know what they're doing.
+
+Another advantage of the large project is that it allows the introduction of testing techniques that are harder to make ``real'' in smaller environments.
+
+\item Applied data structures. A compiler has a lot of data that needs to be managed. Many data structures present ``clean'' data structures, but real-life data-problems often aren't so clean. How about a cyclic tree that contains links to a stack of hash tables that in turn has links back to nodes of the tree? OK, if your tree is cyclic, you probably have a bug, but most data structures classes don't give you the opportunity to make (and then fix) such bugs. Having the opportunity to get buried in data is good for you.
+
+\item Applied algorithms. I started to learn calculus in high school. I continued my learning of calculus in college. But I didn't really understand what a $dx$ was until I encountered them in my calculus based physics class. They were no longer merely symbols on a paper, they were now applied, and that's how I finally grasped what they really were. In the same sense, a compiler allows you to apply quite a number of algorithms (and data structures). In doing so, they should be more ``real''.
+
+\item Performance considerations. Computers have gotten so fast, we rarely have to worry about performance (time or memory) considerations. Most compiler runs are also fast enough that the compiler's performance doesn't much matter. But given a compiler, you can compile something very big like the Linux Kernel. Performance now matters. Because of this, a compiler class gives the right to talk about performance considerations in a practical sense.
+
+\end{enumerate}
+
+\section{What is a compiler?}
+Perhaps before asking, ``Why study compilers?'' it would have been best to establish what a compiler is. But most students, by the time they get to a compiler course, have already used compilers so they have some sense of what they are: The software that translates my source code into executable code. We need to be a bit more formal as well as a bit broader in our definition.
+
+In the broadest sense, a compiler takes code as input and outputs an improved version of that code. For the compiler to be valid, it must follow two guiding principles:
+\begin{enumerate}
+\item The compiler must preserve the meaning of the original program.
+\item The compiler must improve the code in some discernible way.
+\end{enumerate}
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+\node (a) at (-5,0) {};
+\node (b) at (0,0) [shape=rectangle, draw] {Compiler};
+\node (c) at (5,0) {};
+
+\draw [->] (a) -- (b) node [midway, above] {code} ;
+\draw [->] (b) -- (c) node [midway, above] {improved code} ;
+%\draw [->] (b) -- (c) node [midway, above, text width=3cm, align=center] {improved\\code} ;
+\end{tikzpicture}
+ \caption[What is a Compiler]{A compiler is a program that takes code as input and outputs an improved version of that code.}
+  \label{F.whatiscompiler}
+\end{figure}
+%----------------------------------------------------------
+
+To illustrate the first principle, if you had a program that output the numbers from $1..10$ and the compiler transformed it so that it output one of e.e. cummings's poems, then clearly the compiler did not preserve the meaning of the original program.
+
+The second principle is a bit less clear. If the code is a program, and you want to execute your program, then transforming your source code into an executable program would be an improvement. But suppose your source was a C program and the output was an equivalent Java program. Would that be an improvement?
+
+This definition of a compiler is deliberately broad. The preprocessor for a C compiler (often a separate program from the C compiler) is considered a compiler. \LaTeX, which was used to typeset this book, is a compiler. Indeed, any converter program can be considered a compiler given this definition. For the sake of this book (and most compiler courses), we will primarily restrict ourselves to compilers where the input is a programming language. The output, however, does not need to be executable code. It can be any form of ``improved'' code.
+
+\chapter{Compiler Structure}
+Compilers are typically broken into two broad pieces: the front-end and the back-end. The frond-end deals with language specific issues. The back-end deals with target machine specifics.
+
+A C compiler would need a very different front-end compared with a Haskell compiler because the syntax of the languages is very different. One way to view the front-end of the compiler is that it answers the question, ``Is this a valid program?'' If you feed a Scheme program into an R compiler, the answer would certainly by ``No''. If a Java program that was missing a semicolon was fed into a Java compiler, the answer would also be, ``No'', but for very different reasons.
+
+The back-end of a compiler deals with target specific issues. The back-end for a compiler that targets the Java Virtual Machine (JVM) would be different than the back-end for a compiler that targets and ARM processor. Both of those would be different from a C preprocessor that simply outputs text.
+
+Separating the front-end from the back-end makes sense because they are logically quite different, but it also makes sense because if they are properly designed, you can mix and match different front-ends and back-ends. Suppose you had a really good C compiler, but you wanted to port it to target a different machine. There would be no reason to rewrite the front-end. The C language is the same no matter what machine you are targeting. So if you wrote a new back-end and attached it to your existing front-end, you would now have a new compiler. Mixing can go the other way as well. Starting with the same really good C compiler, suppose you wanted a compiler for a different language (such as Go). There is no reason to rewrite the back-end, simply create a front-end for the new language and attach it to your existing back-end, and you have a new compiler.
+
+For this mixing and matching to work seamlessly, there needs to be a common interface between the front-ends and the back-ends. This interface is typically called an Intermediate Representation (IR) --- see Chapter~\ref{chapter.IR}. The front-end translates the language into the IR, and the back-end translates the IR to the target representation. This is illustrated in Figure~\ref{figure.compiler_structure}
+
+%----------------------------------------------------------
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}
+\node (a) at (-5,1.5) [shape=rectangle, draw]{C front-end};
+\node (b) at (-5,0) [shape=rectangle, draw] {Go front-end};
+\node (c) at (-5,-1.5) [shape=rectangle, draw]{FORTRAN fron-end};
+\node (d) at (0,0)  [shape=circle, draw]{IR};
+\node (e) at (5,1.5) [shape=rectangle, draw]{x86 back-end};
+\node (f) at (5,0) [shape=rectangle, draw] {ARM back-end};
+\node (g) at (5,-1.5) [shape=rectangle, draw]{JVM back-end};
+
+\draw [->] (a) -- (d)  ;
+\draw [->] (b) -- (d)  ;
+\draw [->] (c) -- (d)  ;
+\draw [->] (d) -- (e)  ;
+\draw [->] (d) -- (f)  ;
+\draw [->] (d) -- (g)  ;
+\end{tikzpicture}
+ \caption[Compiler Structure]{A properly structured compiler allows you to have multiple language-specific front-ends joined to multiple target-specific back-ends. The two a joined using an intermediate representation.}
+  \label{figure.compiler_structure}
+\end{figure}
+%----------------------------------------------------------
+
+Compiler front-ends typically contain two components: A scanner (aka tokenizer or lexer), and a parser. Scanners are discussed in detail in Part~\ref{part.scanner} and parsers are discussed in Part~\ref{part.parser}.
+
+Most computer program source code comes in the form of a stream of characters (a text file). The scanner turns the stream of characters into a stream of tokens. For example, it the scanner read the characters ``\code{some_variable_name}'', it would output the single token \code{IDENTIFIER}. For a longer example, the string ``\code{int main() \{ printf("hello world"\\n); \}}'' would be converted to the tokens ``\code{TYPE IDENTIFIER ( ) \{ IDENTIFIER ( STRING_LIT ) ; \}}''.
+
+Note: Programmers normally format their code to make it ``pretty''. The code in the above examples was not formatted to emphasize that to a compiler, code is just a stream of characters.
+
+The parser takes a stream of tokens and decides whether that stream of tokens makes up a valid program (more specifically a ``compilation unit'') in the language. The parser only looks at the syntax of the language. As a result, ``valid program'' only means ``a program that is syntactically correct''. It does not mean ``a bug free program''.
+
+\chapter{Intermediate Representations} \label{chapter.IR}
+
+\part{Scanning} \label{part.scanner}
+
+\chapter[Creating a Scanner]{Creating a Scanner from Regular Expressions}
+
+To specify a scanner for a compiler, a developer could specify a regular expression for each token type. But how do you go from that specification to code that can actually process the input? This chapter discusses the algorithms used to convert regular expressions into a scanner. The general process is to convert the regular expression into a finite automaton. The finite automaton can then be evaluated using a simple table look-up on each character.
+
+
+zzz
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Scanner Code}

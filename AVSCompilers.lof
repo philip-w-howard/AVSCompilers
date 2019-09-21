@@ -4,23 +4,25 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Sample Finite Automaton}}{20}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces FA for double letters}}{22}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Transition Table}}{22}{figure.4.3}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Sample Non-deterministic Finite Automaton}}{23}{figure.4.4}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Thompson's Construction}}{24}{figure.4.5}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces NFA produced by Thompson's}}{28}{figure.4.6}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Transition table for DFA}}{35}{figure.4.7}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces What is a Compiler}}{26}{figure.7.1}
+\contentsline {figure}{\numberline {7.1}{\ignorespaces What is a Compiler}}{42}{figure.7.1}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {8.1}{\ignorespaces Compiler Structure}}{29}{figure.8.1}
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {10.1}{\ignorespaces Sample Finite Automaton}}{34}{figure.10.1}
-\contentsline {figure}{\numberline {10.2}{\ignorespaces Sample Non-deterministic Finite Automaton}}{35}{figure.10.2}
-\contentsline {figure}{\numberline {10.3}{\ignorespaces Thompson's Construction}}{37}{figure.10.3}
-\contentsline {figure}{\numberline {10.4}{\ignorespaces NFA produced by Thompson's}}{40}{figure.10.4}
-\contentsline {figure}{\numberline {10.5}{\ignorespaces Transition table for DFA}}{47}{figure.10.5}
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Compiler Structure}}{45}{figure.8.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {13.1}{\ignorespaces CFG of a simple programming language}}{59}{figure.13.1}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {13.1}{\ignorespaces CFG of a simple programming language}}{60}{figure.13.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
